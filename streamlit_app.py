@@ -23,7 +23,7 @@ st.title("Property Occupancy Timeline")
 
 records = []
 
-for idx, row in df.iterrows():
+for idx, row in data.iterrows():
     prop = row['Property']
     # 合并 current lease
     if pd.notnull(row['Lease From']) and pd.notnull(row['Lease To']):
