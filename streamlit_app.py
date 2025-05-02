@@ -109,7 +109,8 @@ else:
                     ticks="outside",
                     showgrid=True,
                     side="top",
-                    range=[f"{current_year}-01-01", f"{current_year}-12-31"]
+                    range=[f"{current_year}-01-01", f"{current_year}-12-31"],
+                    title="DATE"
                 )
                 )
                 st.plotly_chart(fig, use_container_width=True)
