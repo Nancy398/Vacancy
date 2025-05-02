@@ -116,22 +116,22 @@ df = pd.DataFrame(records)
 #         st.plotly_chart(fig, use_container_width=True)
 
 
-# selected_date = st.date_input("📅 Select a date to view vacant units", datetime.date.today())
+selected_date = st.date_input("📅 Select a date to view vacant units", datetime.date.today())
 
-# # 找出所有 unit-room
-# all_units = df[['Property Name','Property']]
+# 找出所有 unit-room
+all_units = df[['Property Name','Property']]
 
-# # 找出该时间点已被租的 unit-room
-# occupied = df[
-#     (df['Start'] <= pd.to_datetime(selected_date)) &
-#     (df['End'] >= pd.to_datetime(selected_date))
-# ][['Property Name', 'Property']].drop_duplicates()
+# 找出该时间点已被租的 unit-room
+occupied = df[
+    (df['Start'] <= pd.to_datetime(selected_date)) &
+    (df['End'] >= pd.to_datetime(selected_date))
+][['Property Name', 'Property']].drop_duplicates()
 
-# # 反推 vacant 的 unit-room
-# vacant = pd.merge(all_units, occupied, 
-#                   on=['Property Name', 'Property'], 
-#                   how='left', indicator=True)
-# vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
+# 反推 vacant 的 unit-room
+vacant = pd.merge(all_units, occupied, 
+                  on=['Property Name', 'Property'], 
+                  how='left', indicator=True)
+vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
 
 # 显示表格
 st.subheader(f"🏠 Units Vacant on {selected_date}")
