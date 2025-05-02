@@ -59,14 +59,18 @@ for property_name in all_property_names:
         show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
 
         # 筛选 Unit 和 Room
-        units_for_property = df_plot[df_plot['Property Name'] == property_name]['Unit'].unique()
-        rooms_for_property = df_plot[df_plot['Property Name'] == property_name]['Room'].unique()
+        all_units = sorted(df_prop["Unit"].unique())
+        select_all_units = st.checkbox(f"Select All Units ({prop_name})", key=f"{prop_name}_units_all", value=True)
+        selected_units = all_units if select_all_units else st.multiselect(
+            "Units", all_units, key=f"{prop_name}_units")
 
-        # 筛选 Unit
-        selected_units = st.multiselect("Select Units", options=units_for_property, default=units_for_property)
+        df_prop_units = df_prop[df_prop["Unit"].isin(selected_units)] if selected_units else df_prop
 
-        # 筛选 Room
-        selected_rooms = st.multiselect("Select Rooms", options=rooms_for_property, default=rooms_for_property)
+        all_rooms = sorted(df_prop_units["Room"].unique())
+        select_all_rooms = st.checkbox(f"Select All Rooms ({prop_name})", key=f"{prop_name}_rooms_all", value=True)
+        selected_rooms = all_rooms if select_all_rooms else st.multiselect(
+            "Rooms", all_rooms, key=f"{prop_name}_rooms")
+
 
         # 根据选择的 Unit 和 Room 筛选数据
         df_property = df_plot[(df_plot['Property Name'] == property_name) & 
