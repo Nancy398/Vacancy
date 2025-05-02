@@ -247,7 +247,7 @@ with tab1:
                 xaxis=dict(
                     title="Date",
                     tickformat="%Y-%m-%d",
-                    tickangle=45,
+                    tickangle=30,
                     ticks="outside",
                     showgrid=True,
                     side="top",
