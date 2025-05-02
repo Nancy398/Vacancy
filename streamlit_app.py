@@ -19,8 +19,6 @@ def read_file(name,sheet):
 
 data = read_file('Vacancy','Full Book')
 
-st.title("Property Occupancy Timeline")
-
 records = []
 
 for idx, row in data.iterrows():
@@ -43,16 +41,24 @@ for idx, row in data.iterrows():
 df_plot = pd.DataFrame(records)
 
 # Streamlit 页面
-st.title("Property Occupancy Timeline (Unified)")
+st.title("Property Occupancy Timeline")
 
-fig = px.timeline(
+search = st.text_input("Search property name (partial match):")
+if search:
+    df_plot = df_plot[df_plot['property'].str.contains(search, case=False, na=False)]
+
+# ➕ 若搜索后结果为空，提示用户
+if df_plot.empty:
+    st.warning("No properties matched your search.")
+else:
+    fig = px.timeline(
     df_plot,
     x_start="Start",
     x_end="End",
     y="Property",
     color_discrete_sequence=["#4CAF50"],  # 统一颜色
-)
-
-fig.update_yaxes(autorange="reversed")
-fig.update_layout(showlegend=False, title="Occupancy Timeline (no lease type)")
-st.plotly_chart(fig, use_container_width=True)
+    )
+    
+    fig.update_yaxes(autorange="reversed")
+    fig.update_layout(showlegend=False, title="Occupancy Timeline")
+    st.plotly_chart(fig, use_container_width=True)
