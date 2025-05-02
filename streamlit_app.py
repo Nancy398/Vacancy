@@ -116,8 +116,8 @@ df = pd.DataFrame(records)
 #         st.plotly_chart(fig, use_container_width=True)
 
 
-df['Lease From'] = pd.to_datetime(df['Lease From'])
-df['Lease To'] = pd.to_datetime(df['Lease To'])
+df['Start'] = pd.to_datetime(df['Start'])
+df['End'] = pd.to_datetime(df['End'])
 
 selected_date = st.date_input("📅 Select a date to view vacant units", datetime.date.today())
 
