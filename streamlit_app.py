@@ -21,6 +21,49 @@ def read_file(name,sheet):
   df = pd.DataFrame(df.values[1:], columns=df.iloc[0])
   return df
 
+Full = read_file("Vacancy","Full Book")
+Appfolio = read_file("Vacancy","Appfolio")
+
+Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
+Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
+WholeRent = Appfolio[(Appfolio['Unit1']==Appfolio['Unit2'])&(Appfolio['Status'].isin(['Current', 'Notice-Rented']))].reset_index(drop=True)
+
+for i in range(len(Full)):
+  for j in range(len(Appfolio)):
+    if (Full['Unit'][i] == Appfolio['Unit1'][j])&(Full['Room'][i] == Appfolio['Unit2'][j]):
+      Full['Property Name'][i] = Appfolio['Property Name'][j]
+      Full['Lease From'][i] = Appfolio['Lease From'][j]
+      Full['Lease To'][i] = Appfolio['Lease To'][j]
+      Full['Tenant'][i] = Appfolio['Tenant'][j]
+
+for i in range(len(Full)):
+  for j in range(len(WholeRent)):
+    if Full['Unit'][i] == WholeRent['Unit1'][j]:
+      Full['Lease From'][i] = WholeRent['Lease From'][j]
+      Full['Lease To'][i] = WholeRent['Lease To'][j]
+      Full['Tenant'][i] = WholeRent['Tenant'][j]
+
+Future = read_file("Vacancy","Future")
+Future[['Unit1', 'Unit2']] = Future['Unit'].str.split(' - ', expand=True)
+WholeRentFuture = Future[(Future['Unit1']==Future['Unit2'])].reset_index(drop=True)
+
+for i in range(len(Full)):
+  for j in range(len(Future)):
+    if (Full['Unit'][i] == Future['Unit1'][j])&(Full['Room'][i] == Future['Unit2'][j]):
+      Full['Future Lease From'][i] = Future['Move-in'][j]
+      Full['Future Lease To'][i] = Future['Lease To'][j]
+      Full['Future Tenant'][i] = Future['Tenant'][j]
+
+for i in range(len(Full)):
+  for j in range(len(WholeRentFuture)):
+    if Full['Unit'][i] == WholeRentFuture['Unit1'][j]:
+      Full['Future Lease From'][i] = WholeRentFuture['Move-in'][j]
+      Full['Future Lease To'][i] = WholeRentFuture['Lease To'][j]
+      Full['Future Tenant'][i] = WholeRentFuture['Tenant'][j]
+
+worksheet = gc.open('Vacancy').worksheet('Full Book')
+set_with_dataframe(worksheet, Full)
+
 data = read_file('Vacancy','Full Book')
 
 records = []
