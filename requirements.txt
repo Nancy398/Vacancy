@@ -1,5 +1,7 @@
 streamlit
 pandas
 plotly.express
-google.oauth2.service_account
 gspread
+oauth2client
+datetime
+gspread_dataframe
