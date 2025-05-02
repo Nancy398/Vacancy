@@ -155,7 +155,7 @@ else:
             df_prop,
             x_start='Start',
             x_end='End',
-            y='Unit-Room',
+            y='Property',
             color_discrete_sequence=["#A7C7E7"]
         )
 
@@ -172,7 +172,7 @@ else:
                 showgrid=True,
                 side="top"
             ),
-            height=40 * len(df_prop["Unit-Room"].unique()) + 100
+            height=40 * len(df_prop["Property"].unique()) + 100
         )
         st.plotly_chart(fig, use_container_width=True)
 # all_property_names = sorted(df_plot['Property Name'].unique())
