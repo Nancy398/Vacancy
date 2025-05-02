@@ -4,6 +4,7 @@ import plotly.express as px
 from google.oauth2.service_account import Credentials
 import gspread
 import datetime
+from gspread_dataframe import set_with_dataframe
 
 current_year = datetime.datetime.now().year
 next_year = current_year + 1
