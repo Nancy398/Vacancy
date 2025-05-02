@@ -131,17 +131,19 @@ occupied = df[
 ][['Property Name', 'Property']].drop_duplicates()
 
 # 反推 vacant 的 unit-room
-vacant = pd.merge(df, occupied, 
+vacant = pd.merge(all_units, occupied, 
                   on=['Property Name', 'Property'], 
                   how='left', indicator=True)
 vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
+vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End']],
+                             on=['Property Name', 'Property'], how='left')
 
 # 显示表格
 st.subheader(f"🏠 Units Vacant on {selected_date}")
 if vacant.empty:
     st.info("No vacant units at this time.")
 else:
-    st.dataframe(vacant)
+    st.dataframe(vacant_with_dates)
 
     # 🔍 找出这些空置 unit 的全部租期信息
     df_vacant_plot = pd.merge(vacant, df, on=['Property Name', 'Property'])
