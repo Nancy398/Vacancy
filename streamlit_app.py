@@ -120,7 +120,7 @@ with tab1:
 
 
 with tab2:
-
+    st.title('Vacancy Information')
     df['Start'] = pd.to_datetime(df['Start'])
     df['End'] = pd.to_datetime(df['End'])
     
