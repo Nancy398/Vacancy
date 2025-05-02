@@ -55,7 +55,7 @@ if df_plot.empty:
     st.warning("No properties matched your search.")
 else:
     fig = px.timeline(
-    df_plot,
+    df_plot_filtered,
     x_start="Start",
     x_end="End",
     y="Property",
