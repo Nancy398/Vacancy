@@ -5,4 +5,3 @@ gspread
 oauth2client
 datetime
 gspread_dataframe
-set_with_dataframe
