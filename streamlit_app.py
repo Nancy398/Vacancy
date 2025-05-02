@@ -59,12 +59,12 @@ for property_name in all_property_names:
         show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
 
         # 筛选 Unit 和 Room
-        all_units = sorted(df_prop["Unit"].unique())
+        all_units = sorted(df_plot["Unit"].unique())
         select_all_units = st.checkbox(f"Select All Units ({prop_name})", key=f"{prop_name}_units_all", value=True)
         selected_units = all_units if select_all_units else st.multiselect(
             "Units", all_units, key=f"{prop_name}_units")
 
-        df_prop_units = df_prop[df_plot["Unit"].isin(selected_units)] if selected_units else df_prop
+        df_prop_units = df_plot[df_plot["Unit"].isin(selected_units)] if selected_units else df_prop
 
         all_rooms = sorted(df_prop_units["Room"].unique())
         select_all_rooms = st.checkbox(f"Select All Rooms ({prop_name})", key=f"{prop_name}_rooms_all", value=True)
