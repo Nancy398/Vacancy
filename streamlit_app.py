@@ -171,8 +171,10 @@ else:
                 ticks="outside",
                 showgrid=True,
                 side="top"
+                range = [f"{current_year}-01-01", f"{current_year}-12-31"]
             ),
             height=40 * len(df_prop["Property"].unique()) + 100
+          
         )
         st.plotly_chart(fig, use_container_width=True)
 # all_property_names = sorted(df_plot['Property Name'].unique())
