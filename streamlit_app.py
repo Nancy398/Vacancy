@@ -131,7 +131,7 @@ occupied = df[
 ][['Property Name', 'Property']].drop_duplicates()
 
 # 反推 vacant 的 unit-room
-vacant = pd.merge(all_units, occupied, 
+vacant = pd.merge(df, occupied, 
                   on=['Property Name', 'Property'], 
                   how='left', indicator=True)
 vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
