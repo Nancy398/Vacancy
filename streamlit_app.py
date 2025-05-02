@@ -52,9 +52,10 @@ st.title("Property Occupancy Information")
 
 all_property_names = sorted(df_filtered_this_year['Property Name'].unique())
 
+# 遍历所有 Property Name
 for property_name in all_property_names:
     with st.expander(f"Property: {property_name}"):
-        # 是否展示明年的数据
+        # 在每个 Property Name 的面板内设置 Extend to Show Next Year 的选项
         show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
 
         # 筛选 Unit 和 Room
@@ -83,7 +84,7 @@ for property_name in all_property_names:
             df_property,  # 使用该 Property Name 的数据
             x_start="Start",
             x_end="End",
-            y="Property",
+            y="Unit-Room",
             color_discrete_sequence=["#A7C7E7"]
         )
 
@@ -92,7 +93,7 @@ for property_name in all_property_names:
             showlegend=False,
             title=None,
             margin=dict(l=20, r=20, t=20, b=20),
-            height=40 * len(df_property["Property"].unique()) + 100,
+            height=40 * len(df_property["Unit-Room"].unique()) + 100,
             xaxis=dict(
                 tickformat="%Y-%m-%d",  # 日期格式：年-月-日
                 tickangle=45,
