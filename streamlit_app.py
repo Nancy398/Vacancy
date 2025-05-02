@@ -47,14 +47,14 @@ all_units = sorted(df_plot['Unit'].unique())
 all_rooms = sorted(df_plot['Room'].unique())
 
 select_all_units = st.checkbox("Select All Units")
-select_all_rooms = st.checkbox("Select All Rooms")
 
 # 根据是否选择 "Select All" 来显示多选框
 if select_all_units:
     selected_units = all_units  # 默认选中所有 Units
 else:
     selected_units = st.multiselect("Units", options=all_units, default=[], label_visibility="collapsed")
-
+  
+select_all_rooms = st.checkbox("Select All Rooms")
 if select_all_rooms:
     selected_rooms = all_rooms  # 默认选中所有 Rooms
 else:
