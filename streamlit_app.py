@@ -108,7 +108,7 @@ else:
                     tickangle=45,
                     ticks="outside",
                     showgrid=True,
-                    side="top"
+                    side="top",
                     range=[f"{current_year}-01-01", f"{current_year}-12-31"]
                 )
                 )
