@@ -65,7 +65,9 @@ df_filtered = df_plot[df_plot["Property Name"].isin(selected_properties)]
 
 st.title("📊 Property Occupancy")
 
-show_next_year = st.checkbox("Extend to Show Next Year", value=False)
+with st.container():
+    # 是否展示明年的数据
+    show_next_year = st.checkbox("Extend to Show Next Year", value=False)
 
 # 如果选择展示明年，将 X 轴范围扩展至明年
 if show_next_year:
