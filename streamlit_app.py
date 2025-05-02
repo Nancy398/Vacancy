@@ -47,7 +47,15 @@ df_plot = pd.DataFrame(records)
 st.title("Property Occupancy Information")
 
 all_property_names = sorted(df_plot['Property Name'].unique())
-selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=all_property_names)
+
+# 添加 "Select All" 复选框
+select_all_props = st.checkbox("Select All Property Names", value=True)
+
+# 根据是否勾选决定默认选项
+if select_all_props:
+    selected_properties = all_property_names
+else:
+    selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=[], label_visibility="collapsed")
 
 df_filtered = df_plot[df_plot["Property Name"].isin(selected_properties)]
 
@@ -59,7 +67,7 @@ else:
     for prop_name in selected_properties:
         df_prop = df_filtered[df_filtered["Property Name"] == prop_name]
 
-        with st.expander(f"📁 {prop_name}", expanded=True):
+        with st.expander(f"📁 {prop_name}", expanded=False):
             st.markdown("### Filter for this property")
 
             all_units = sorted(df_prop["Unit"].unique())
