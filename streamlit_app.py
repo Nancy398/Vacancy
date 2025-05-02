@@ -43,23 +43,28 @@ df_plot = pd.DataFrame(records)
 # Streamlit 页面
 st.title("Property Occupancy Timeline")
 
-all_properties = df_plot['Property'].unique().tolist()
-selected_properties = st.multiselect("Select one or more properties:", all_properties, default=[])
+all_units = sorted(df_plot['Unit'].unique())
+all_rooms = sorted(df_plot['Room'].unique())
 
-# 过滤数据
-df_plot_filtered = df_plot[df_plot['Property'].isin(selected_properties)]
+selected_units = st.multiselect("Select Unit(s):", all_units, default=[])
+selected_rooms = st.multiselect("Select Room(s):", all_rooms, default=[])
 
-
+# 根据选择筛选
+df_filtered = df_plot.copy()
+if selected_units:
+    df_filtered = df_filtered[df_filtered['Unit'].isin(selected_units)]
+if selected_rooms:
+    df_filtered = df_filtered[df_filtered['Room'].isin(selected_rooms)]
 # ➕ 若搜索后结果为空，提示用户
 if df_plot.empty:
     st.warning("No properties matched your search.")
 else:
     fig = px.timeline(
-    df_plot_filtered,
+    df_filtered,
     x_start="Start",
     x_end="End",
     y="Property",
-    color_discrete_sequence=["#4CAF50"],  # 统一颜色
+    color_discrete_sequence=["#A7C7E7"],  # 统一颜色
     )
     
     fig.update_yaxes(autorange="reversed")
