@@ -45,7 +45,7 @@ st.title("Property Occupancy Timeline")
 
 search = st.text_input("Search property name (partial match):")
 if search:
-    df_plot = df_plot[df_plot['property'].str.contains(search, case=False, na=False)]
+    df_plot = df_plot[df_plot['Property'].str.contains(search, case=False, na=False)]
 
 # ➕ 若搜索后结果为空，提示用户
 if df_plot.empty:
