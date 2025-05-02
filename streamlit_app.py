@@ -245,7 +245,6 @@ with tab1:
                 title=None,
                 margin=dict(l=20, r=20, t=20, b=20),
                 xaxis=dict(
-                    title="Date",
                     tickformat="%Y-%m-%d",
                     tickangle=30,
                     ticks="outside",
