@@ -52,6 +52,9 @@ st.title("Property Occupancy Information")
 
 all_property_names = sorted(df_plot['Property Name'].unique())
 
+# 添加 "Select All" 复选框
+select_all_props = st.checkbox("Select All Property Names", value=True)
+
 if select_all_props:
     selected_properties = all_property_names
 else:
