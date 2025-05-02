@@ -49,7 +49,7 @@ df = pd.DataFrame(records)
 
 tab1, tab2 = st.tabs(["🏠 Vacant Units", "📊 All Lease Info"])
 
-with tab1:
+with tab2:
     # Streamlit 页面
     st.title("Property Occupancy Information")
     
@@ -119,7 +119,7 @@ with tab1:
             st.plotly_chart(fig, use_container_width=True)
 
 
-with tab2:
+with tab1:
     st.title('Vacancy Information')
     df['Start'] = pd.to_datetime(df['Start'])
     df['End'] = pd.to_datetime(df['End'])
@@ -142,6 +142,8 @@ with tab2:
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End']],
                                  on=['Property Name', 'Property'], how='left')
+
+    
     
     # 显示表格
     st.subheader(f"🏠 Units Vacant on {selected_date}")
@@ -152,9 +154,11 @@ with tab2:
     
         # 🔍 找出这些空置 unit 的全部租期信息
         df_vacant_plot = pd.merge(vacant, df, on=['Property Name', 'Property'])
-    
+      
         # 🎨 按 Property Name 展示图
         for prop_name in df_vacant_plot['Property Name'].unique():
+            if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
+              continue
             st.markdown(f"### 📌 {prop_name}")
             df_prop = df_vacant_plot[df_vacant_plot['Property Name'] == prop_name]
     
