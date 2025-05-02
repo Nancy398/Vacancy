@@ -54,28 +54,27 @@ all_property_names = sorted(df_plot['Property Name'].unique())
 
 # 遍历所有 Property Name
 for property_name in all_property_names:
+    df_prop = df_filtered[df_filtered["Property Name"] == prop_name]
     with st.expander(f"Property: {property_name}"):
         # 在每个 Property Name 的面板内设置 Extend to Show Next Year 的选项
         show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
 
         # 筛选 Unit 和 Room
-        all_units = sorted(df_plot["Unit"].unique())
+        st.markdown("### Filter for this property")
+
+        all_units = sorted(df_prop["Unit"].unique())
         select_all_units = st.checkbox(f"Select All Units ({prop_name})", key=f"{prop_name}_units_all", value=True)
         selected_units = all_units if select_all_units else st.multiselect(
             "Units", all_units, key=f"{prop_name}_units")
 
-        df_prop_units = df_plot[df_plot["Unit"].isin(selected_units)] if selected_units else df_prop
+        df_prop_units = df_prop[df_prop["Unit"].isin(selected_units)] if selected_units else df_prop
 
         all_rooms = sorted(df_prop_units["Room"].unique())
         select_all_rooms = st.checkbox(f"Select All Rooms ({prop_name})", key=f"{prop_name}_rooms_all", value=True)
         selected_rooms = all_rooms if select_all_rooms else st.multiselect(
             "Rooms", all_rooms, key=f"{prop_name}_rooms")
 
-
-        # 根据选择的 Unit 和 Room 筛选数据
-        df_property = df_plot[(df_plot['Property Name'] == property_name) & 
-                              (df_plot['Unit'].isin(selected_units)) & 
-                              (df_plot['Room'].isin(selected_rooms))]
+        df_final = df_prop_units[df_prop_units["Room"].isin(selected_rooms)] if selected_rooms else df_prop_units
 
         # 根据选项，动态设置 X 轴的时间范围
         if show_next_year:
@@ -85,7 +84,7 @@ for property_name in all_property_names:
 
         # 根据筛选后的数据来展示图表
         fig = px.timeline(
-            df_property,  # 使用该 Property Name 的数据
+            df_final,  # 使用该 Property Name 的数据
             x_start="Start",
             x_end="End",
             y="Property",
@@ -144,21 +143,21 @@ for property_name in all_property_names:
 #         df_prop = df_filtered[df_filtered["Property Name"] == prop_name]
 
 #         with st.expander(f"📁 {prop_name}", expanded=False):
-#             st.markdown("### Filter for this property")
+            # st.markdown("### Filter for this property")
 
-#             all_units = sorted(df_prop["Unit"].unique())
-#             select_all_units = st.checkbox(f"Select All Units ({prop_name})", key=f"{prop_name}_units_all", value=True)
-#             selected_units = all_units if select_all_units else st.multiselect(
-#                 "Units", all_units, key=f"{prop_name}_units")
+            # all_units = sorted(df_prop["Unit"].unique())
+            # select_all_units = st.checkbox(f"Select All Units ({prop_name})", key=f"{prop_name}_units_all", value=True)
+            # selected_units = all_units if select_all_units else st.multiselect(
+            #     "Units", all_units, key=f"{prop_name}_units")
 
-#             df_prop_units = df_prop[df_prop["Unit"].isin(selected_units)] if selected_units else df_prop
+            # df_prop_units = df_prop[df_prop["Unit"].isin(selected_units)] if selected_units else df_prop
 
-#             all_rooms = sorted(df_prop_units["Room"].unique())
-#             select_all_rooms = st.checkbox(f"Select All Rooms ({prop_name})", key=f"{prop_name}_rooms_all", value=True)
-#             selected_rooms = all_rooms if select_all_rooms else st.multiselect(
-#                 "Rooms", all_rooms, key=f"{prop_name}_rooms")
+            # all_rooms = sorted(df_prop_units["Room"].unique())
+            # select_all_rooms = st.checkbox(f"Select All Rooms ({prop_name})", key=f"{prop_name}_rooms_all", value=True)
+            # selected_rooms = all_rooms if select_all_rooms else st.multiselect(
+            #     "Rooms", all_rooms, key=f"{prop_name}_rooms")
 
-#             df_final = df_prop_units[df_prop_units["Room"].isin(selected_rooms)] if selected_rooms else df_prop_units
+            # df_final = df_prop_units[df_prop_units["Room"].isin(selected_rooms)] if selected_rooms else df_prop_units
 
 #             if df_final.empty:
 #                 st.info("No data for selected filters.")
