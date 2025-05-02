@@ -52,39 +52,25 @@ st.title("Property Occupancy Information")
 
 all_property_names = sorted(df_plot['Property Name'].unique())
 
-# 添加 "Select All" 复选框
-select_all_props = st.checkbox("Select All Property Names", value=True)
-
-if select_all_props:
-    selected_properties = all_property_names
-else:
-    selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=[], label_visibility="collapsed")
-
-df_filtered = df_plot[df_plot["Property Name"].isin(selected_properties)]
-
-# 遍历所有 Property Name
 for property_name in all_property_names:
-    df_prop = df_filtered[df_filtered["Property Name"] == prop_name]
     with st.expander(f"Property: {property_name}"):
         # 在每个 Property Name 的面板内设置 Extend to Show Next Year 的选项
         show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
 
         # 筛选 Unit 和 Room
-        st.markdown("### Filter for this property")
+        units_for_property = df[df['Property Name'] == property_name]['Unit'].unique()
+        rooms_for_property = df[df['Property Name'] == property_name]['Room'].unique()
 
-        all_units = sorted(df_prop["Unit"].unique())
-        select_all_units = st.checkbox(f"Select All Units ({prop_name})", key=f"{prop_name}_units_all", value=True)
-        selected_units = all_units if select_all_units else st.multiselect(
-            "Units", all_units, key=f"{prop_name}_units")
+        # 筛选 Unit
+        selected_units = st.multiselect("Select Units", options=units_for_property, default=units_for_property)
 
-        df_prop_units = df_prop[df_prop["Unit"].isin(selected_units)] if selected_units else df_prop
+        # 筛选 Room
+        selected_rooms = st.multiselect("Select Rooms", options=rooms_for_property, default=rooms_for_property)
 
-        all_rooms = sorted(df_prop_units["Room"].unique())
-        select_all_rooms = st.checkbox(f"Select All Rooms ({prop_name})", key=f"{prop_name}_rooms_all", value=True)
-        selected_rooms = all_rooms if select_all_rooms else st.multiselect(
-            "Rooms", all_rooms, key=f"{prop_name}_rooms")
-
-        df_final = df_prop_units[df_prop_units["Room"].isin(selected_rooms)] if selected_rooms else df_prop_units
+        # 根据选择的 Unit 和 Room 筛选数据
+        df_property = df[(df['Property Name'] == property_name) & 
+                         (df['Unit'].isin(selected_units)) & 
+                         (df['Room'].isin(selected_rooms))]
 
         # 根据选项，动态设置 X 轴的时间范围
         if show_next_year:
@@ -94,10 +80,10 @@ for property_name in all_property_names:
 
         # 根据筛选后的数据来展示图表
         fig = px.timeline(
-            df_final,  # 使用该 Property Name 的数据
+            df_property,  # 使用该 Property Name 的数据
             x_start="Start",
             x_end="End",
-            y="Property",
+            y="Unit-Room",
             color_discrete_sequence=["#A7C7E7"]
         )
 
@@ -106,7 +92,7 @@ for property_name in all_property_names:
             showlegend=False,
             title=None,
             margin=dict(l=20, r=20, t=20, b=20),
-            height=40 * len(df_final["Property"].unique()) + 100,
+            height=40 * len(df_property["Unit-Room"].unique()) + 100,
             xaxis=dict(
                 tickformat="%Y-%m-%d",  # 日期格式：年-月-日
                 tickangle=45,
@@ -120,7 +106,6 @@ for property_name in all_property_names:
 
         # 显示图表
         st.plotly_chart(fig, use_container_width=True)
-
 # all_property_names = sorted(df_plot['Property Name'].unique())
 
 # # 添加 "Select All" 复选框
