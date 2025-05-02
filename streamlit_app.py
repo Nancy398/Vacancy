@@ -26,14 +26,14 @@ for idx, row in data.iterrows():
     # 合并 current lease
     if pd.notnull(row['Lease From']) and pd.notnull(row['Lease To']):
         records.append({
-            'Property': prop,
+            'Property': prop,'Unit': row['Unit'], 'Room': row['Room'],
             'Start': row['Lease From'],
             'End': row['Lease To']
         })
     # 合并 future lease
     if pd.notnull(row['Future Lease From']) and pd.notnull(row['Future Lease To']):
         records.append({
-            'Property': prop,
+            'Property': prop,'Unit': row['Unit'], 'Room': row['Room'],
             'Start': row['Future Lease From'],
             'End': row['Future Lease To']
         })
