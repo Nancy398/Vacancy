@@ -100,43 +100,12 @@ else:
                     title=None,
                     margin=dict(l=20, r=20, t=20, b=20),
                     height=40 * len(df_final["Property"].unique()) + 100
+                    xaxis=dict(
+                    tickformat="%Y-%m-%d",  # 日期格式
+                    tickangle=45,
+                    ticks="outside",
+                    showgrid=True,
+                    side="top"
                 )
                 st.plotly_chart(fig, use_container_width=True)
-# all_units = sorted(df_plot['Unit'].unique())
-# all_rooms = sorted(df_plot['Room'].unique())
 
-# select_all_units = st.checkbox("Select All Units")
-
-# # 根据是否选择 "Select All" 来显示多选框
-# if select_all_units:
-#     selected_units = all_units  # 默认选中所有 Units
-# else:
-#     selected_units = st.multiselect("Units", options=all_units, default=[], label_visibility="collapsed")
-  
-# select_all_rooms = st.checkbox("Select All Rooms")
-# if select_all_rooms:
-#     selected_rooms = all_rooms  # 默认选中所有 Rooms
-# else:
-#     selected_rooms = st.multiselect("Rooms", options=all_rooms, default=[], label_visibility="collapsed")
-
-# 根据选择筛选
-# df_filtered = df_plot.copy()
-# if selected_units:
-#     df_filtered = df_filtered[df_filtered['Unit'].isin(selected_units)]
-# if selected_rooms:
-#     df_filtered = df_filtered[df_filtered['Room'].isin(selected_rooms)]
-# # ➕ 若搜索后结果为空，提示用户
-# if df_filtered.empty:
-#     st.warning("No properties matched your search.")
-# else:
-#     fig = px.timeline(
-#     df_filtered,
-#     x_start="Start",
-#     x_end="End",
-#     y="Property Name",
-#     color_discrete_sequence=["#A7C7E7"],  # 统一颜色
-#     )
-    
-#     fig.update_yaxes(autorange="reversed")
-#     fig.update_layout(showlegend=False, title="Occupancy Timeline")
-#     st.plotly_chart(fig, use_container_width=True)
