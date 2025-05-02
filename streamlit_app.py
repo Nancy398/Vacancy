@@ -45,12 +45,12 @@ for idx, row in data.iterrows():
             'End': row['Future Lease To']
         })
 
-df_plot = pd.DataFrame(records)
+df = pd.DataFrame(records)
 
 # Streamlit 页面
 st.title("Property Occupancy Information")
 
-all_property_names = sorted(df_plot['Property Name'].unique())
+all_property_names = sorted(df['Property Name'].unique())
 
 for property_name in all_property_names:
     with st.expander(f"Property: {property_name}"):
