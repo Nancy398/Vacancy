@@ -61,8 +61,21 @@ for i in range(len(Full)):
       Full['Future Lease To'][i] = WholeRentFuture['Lease To'][j]
       Full['Future Tenant'][i] = WholeRentFuture['Tenant'][j]
 
-worksheet = gc.open('Vacancy').worksheet('Full Book')
-set_with_dataframe(worksheet, Full)
+
+@st.cache_data(ttl=300)
+def save_data():
+  scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+  credentials = Credentials.from_service_account_info(
+  st.secrets["GOOGLE_APPLICATION_CREDENTIALS"], 
+  scopes=scope)
+  gc = gspread.authorize(credentials)
+  target_spreadsheet_id = 'Vacancy'  # 目标表格的ID
+  target_sheet_name = 'Full Book'  # 目标表格的工作表名称
+  target_sheet = gc.open(target_spreadsheet_id).worksheet(target_sheet_name)
+  
+  return set_with_dataframe(target_sheet, Full)
+  
+save_data()
 
 data = read_file('Vacancy','Full Book')
 
