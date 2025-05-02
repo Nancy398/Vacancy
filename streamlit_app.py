@@ -83,7 +83,7 @@ for property_name in all_property_names:
             df_property,  # 使用该 Property Name 的数据
             x_start="Start",
             x_end="End",
-            y="Unit-Room",
+            y="Property",
             color_discrete_sequence=["#A7C7E7"]
         )
 
@@ -92,7 +92,7 @@ for property_name in all_property_names:
             showlegend=False,
             title=None,
             margin=dict(l=20, r=20, t=20, b=20),
-            height=40 * len(df_property["Unit-Room"].unique()) + 100,
+            height=40 * len(df_property["Property"].unique()) + 100,
             xaxis=dict(
                 tickformat="%Y-%m-%d",  # 日期格式：年-月-日
                 tickangle=45,
