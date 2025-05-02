@@ -91,7 +91,7 @@ else:
                     showlegend=False,
                     title=None,
                     margin=dict(l=20, r=20, t=20, b=20),
-                    height=40 * len(df_final["Unit-Room"].unique()) + 100
+                    height=40 * len(df_final["Property"].unique()) + 100
                 )
                 st.plotly_chart(fig, use_container_width=True)
 # all_units = sorted(df_plot['Unit'].unique())
