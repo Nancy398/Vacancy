@@ -46,6 +46,9 @@ st.title("Property Occupancy Timeline")
 all_units = sorted(df_plot['Unit'].unique())
 all_rooms = sorted(df_plot['Room'].unique())
 
+select_all_units = st.checkbox("Select All Units")
+select_all_rooms = st.checkbox("Select All Rooms")
+
 # 根据是否选择 "Select All" 来显示多选框
 if not select_all_units:
     selected_units = st.multiselect("Units", options=all_units, searchable=True)
