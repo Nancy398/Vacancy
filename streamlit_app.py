@@ -6,6 +6,7 @@ import gspread
 import datetime
 
 current_year = datetime.datetime.now().year
+next_year = current_year + 1
 
 
 def read_file(name,sheet):
@@ -63,6 +64,14 @@ else:
 df_filtered = df_plot[df_plot["Property Name"].isin(selected_properties)]
 
 st.title("📊 Property Occupancy")
+
+show_next_year = st.checkbox("Extend to Show Next Year", value=False)
+
+# 如果选择展示明年，将 X 轴范围扩展至明年
+if show_next_year:
+    x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
+else:
+    x_range = [f"{current_year}-01-01", f"{current_year}-12-31"]
 
 if df_filtered.empty:
     st.warning("No data matched your filters.")
