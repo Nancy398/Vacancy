@@ -215,7 +215,15 @@ with tab1:
     
         # 🔍 找出这些空置 unit 的全部租期信息
         df_vacant_plot = pd.merge(vacant, df, on=['Property Name', 'Property'])
-      
+
+        show_next_year = st.checkbox("Extend to Show Next Year", value=False)
+
+      # 如果选择展示明年，将 X 轴范围扩展至明年
+        if show_next_year:
+            x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
+        else:
+            x_range = [f"{current_year}-01-01", f"{current_year}-12-31"]
+          
         # 🎨 按 Property Name 展示图
         for prop_name in df_vacant_plot['Property Name'].unique():
             if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
@@ -243,7 +251,7 @@ with tab1:
                     ticks="outside",
                     showgrid=True,
                     side="top",
-                    range = [f"{current_year}-01-01", f"{current_year}-12-31"]
+                    range = x_range
                 ),
                 height=40 * len(df_prop["Property"].unique()) + 100
               
