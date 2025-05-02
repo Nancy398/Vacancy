@@ -44,7 +44,7 @@ for idx, row in data.iterrows():
 df_plot = pd.DataFrame(records)
 
 # Streamlit 页面
-st.title("Property Occupancy Timeline")
+st.title("Property Occupancy Information")
 
 # Step 1️⃣: Property Name 筛选
 all_property_names = sorted(df_plot['Property Name'].unique())
