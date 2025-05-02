@@ -50,7 +50,7 @@ df_plot = pd.DataFrame(records)
 # Streamlit 页面
 st.title("Property Occupancy Information")
 
-all_property_names = sorted(df_filtered_this_year['Property Name'].unique())
+all_property_names = sorted(df_plot['Property Name'].unique())
 
 # 遍历所有 Property Name
 for property_name in all_property_names:
