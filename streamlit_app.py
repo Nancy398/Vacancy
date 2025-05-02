@@ -46,8 +46,11 @@ st.title("Property Occupancy Timeline")
 all_units = sorted(df_plot['Unit'].unique())
 all_rooms = sorted(df_plot['Room'].unique())
 
-selected_units = st.multiselect("Select Unit(s):", all_units, default=[])
-selected_rooms = st.multiselect("Select Room(s):", all_rooms, default=[])
+select_all_units = st.checkbox("Select All Units")
+selected_units = st.multiselect("Units", options=all_units, default=all_units if select_all_units else [])
+
+select_all_rooms = st.checkbox("Select All Rooms")
+selected_rooms = st.multiselect("Rooms", options=all_rooms, default=all_rooms if select_all_rooms else [])
 
 # 根据选择筛选
 df_filtered = df_plot.copy()
