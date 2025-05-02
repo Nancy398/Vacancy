@@ -118,7 +118,7 @@ else:
                     ticks="outside",
                     showgrid=True,
                     side="top",
-                    range=[f"{current_year}-01-01", f"{current_year}-12-31"],
+                    range=x_range,
                     title="DATE"
                 )
                 )
