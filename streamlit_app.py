@@ -47,91 +47,91 @@ for idx, row in data.iterrows():
 
 df = pd.DataFrame(records)
 
-# Streamlit 页面
-st.title("Property Occupancy Information")
+# # Streamlit 页面
+# st.title("Property Occupancy Information")
 
-all_property_names = sorted(df['Property Name'].unique())
+# all_property_names = sorted(df['Property Name'].unique())
 
-for property_name in all_property_names:
-    with st.expander(f"Property: {property_name}"):
-        # 在每个 Property Name 的面板内设置 Extend to Show Next Year 的选项
-        show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
+# for property_name in all_property_names:
+#     with st.expander(f"Property: {property_name}"):
+#         # 在每个 Property Name 的面板内设置 Extend to Show Next Year 的选项
+#         show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
 
-        # 筛选 Unit 和 Room
-        units_for_property = df[df['Property Name'] == property_name]['Unit'].unique()
-        rooms_for_property = df[df['Property Name'] == property_name]['Room'].unique()
+#         # 筛选 Unit 和 Room
+#         units_for_property = df[df['Property Name'] == property_name]['Unit'].unique()
+#         rooms_for_property = df[df['Property Name'] == property_name]['Room'].unique()
 
-        selected_units = st.multiselect(
-        "Select Units",
-        options=units_for_property,
-        default=units_for_property,
-        key=f"{property_name}_units"
-    )
+#         selected_units = st.multiselect(
+#         "Select Units",
+#         options=units_for_property,
+#         default=units_for_property,
+#         key=f"{property_name}_units"
+#     )
 
-        selected_rooms = st.multiselect(
-          "Select Rooms",
-        options=rooms_for_property,
-        default=rooms_for_property,
-        key=f"{property_name}_rooms"
-    )
+#         selected_rooms = st.multiselect(
+#           "Select Rooms",
+#         options=rooms_for_property,
+#         default=rooms_for_property,
+#         key=f"{property_name}_rooms"
+#     )
 
-        # 根据选择的 Unit 和 Room 筛选数据
-        df_property = df[(df['Property Name'] == property_name) & 
-                         (df['Unit'].isin(selected_units)) & 
-                         (df['Room'].isin(selected_rooms))]
+#         # 根据选择的 Unit 和 Room 筛选数据
+#         df_property = df[(df['Property Name'] == property_name) & 
+#                          (df['Unit'].isin(selected_units)) & 
+#                          (df['Room'].isin(selected_rooms))]
 
-        # 根据选项，动态设置 X 轴的时间范围
-        if show_next_year:
-            x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
-        else:
-            x_range = [f"{current_year}-01-01", f"{current_year}-12-31"]  # 只显示今年
+#         # 根据选项，动态设置 X 轴的时间范围
+#         if show_next_year:
+#             x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
+#         else:
+#             x_range = [f"{current_year}-01-01", f"{current_year}-12-31"]  # 只显示今年
 
-        # 根据筛选后的数据来展示图表
-        fig = px.timeline(
-            df_property,  # 使用该 Property Name 的数据
-            x_start="Start",
-            x_end="End",
-            y="Property",
-            color_discrete_sequence=["#A7C7E7"]
-        )
+#         # 根据筛选后的数据来展示图表
+#         fig = px.timeline(
+#             df_property,  # 使用该 Property Name 的数据
+#             x_start="Start",
+#             x_end="End",
+#             y="Property",
+#             color_discrete_sequence=["#A7C7E7"]
+#         )
 
-        # 设置日期格式和轴
-        fig.update_layout(
-            showlegend=False,
-            title=None,
-            margin=dict(l=20, r=20, t=20, b=20),
-            height=40 * len(df_property["Property"].unique()) + 100,
-            xaxis=dict(
-                tickformat="%Y-%m-%d",  # 日期格式：年-月-日
-                tickangle=45,
-                ticks="outside",
-                showgrid=True,
-                side="top",  # 将日期放在上方
-                range=x_range,  # 动态设置 X 轴的日期范围
-                title="Date"  # 设置 X 轴标题
-            )
-        )
+#         # 设置日期格式和轴
+#         fig.update_layout(
+#             showlegend=False,
+#             title=None,
+#             margin=dict(l=20, r=20, t=20, b=20),
+#             height=40 * len(df_property["Property"].unique()) + 100,
+#             xaxis=dict(
+#                 tickformat="%Y-%m-%d",  # 日期格式：年-月-日
+#                 tickangle=45,
+#                 ticks="outside",
+#                 showgrid=True,
+#                 side="top",  # 将日期放在上方
+#                 range=x_range,  # 动态设置 X 轴的日期范围
+#                 title="Date"  # 设置 X 轴标题
+#             )
+#         )
 
-        # 显示图表
-        st.plotly_chart(fig, use_container_width=True)
+#         # 显示图表
+#         st.plotly_chart(fig, use_container_width=True)
 
 
-selected_date = st.date_input("📅 Select a date to view vacant units", datetime.date.today())
+# selected_date = st.date_input("📅 Select a date to view vacant units", datetime.date.today())
 
-# 找出所有 unit-room
-all_units = df[['Property Name','Property']]
+# # 找出所有 unit-room
+# all_units = df[['Property Name','Property']]
 
-# 找出该时间点已被租的 unit-room
-occupied = df[
-    (df['Start'] <= pd.to_datetime(selected_date)) &
-    (df['End'] >= pd.to_datetime(selected_date))
-][['Property Name', 'Property']].drop_duplicates()
+# # 找出该时间点已被租的 unit-room
+# occupied = df[
+#     (df['Start'] <= pd.to_datetime(selected_date)) &
+#     (df['End'] >= pd.to_datetime(selected_date))
+# ][['Property Name', 'Property']].drop_duplicates()
 
-# 反推 vacant 的 unit-room
-vacant = pd.merge(all_units, occupied, 
-                  on=['Property Name', 'Property'], 
-                  how='left', indicator=True)
-vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
+# # 反推 vacant 的 unit-room
+# vacant = pd.merge(all_units, occupied, 
+#                   on=['Property Name', 'Property'], 
+#                   how='left', indicator=True)
+# vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
 
 # 显示表格
 st.subheader(f"🏠 Units Vacant on {selected_date}")
