@@ -47,10 +47,10 @@ all_units = sorted(df_plot['Unit'].unique())
 all_rooms = sorted(df_plot['Room'].unique())
 
 select_all_units = st.checkbox("Select All Units")
-selected_units = st.multiselect("Units", options=all_units, default=all_units if select_all_units else [])
+selected_units = st.multiselect("Units", options=all_units, default=all_units if select_all_units else [],searchable=True)
 
 select_all_rooms = st.checkbox("Select All Rooms")
-selected_rooms = st.multiselect("Rooms", options=all_rooms, default=all_rooms if select_all_rooms else [])
+selected_rooms = st.multiselect("Rooms", options=all_rooms, default=all_rooms if select_all_rooms else [],searchable=True)
 
 # 根据选择筛选
 df_filtered = df_plot.copy()
