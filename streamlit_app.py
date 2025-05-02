@@ -46,37 +46,54 @@ df_plot = pd.DataFrame(records)
 # Streamlit 页面
 st.title("Property Occupancy Information")
 
-# Step 1️⃣: Property Name 筛选
 all_property_names = sorted(df_plot['Property Name'].unique())
-select_all_props = st.checkbox("Select All Properties", value=True)
-if select_all_props:
-    selected_properties = all_property_names
+selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=all_property_names)
+
+df_filtered = df_plot[df_plot["Property Name"].isin(selected_properties)]
+
+st.title("📊 Property Occupancy")
+
+if df_filtered.empty:
+    st.warning("No data matched your filters.")
 else:
-    selected_properties = st.multiselect("Select Property Name(s)", options=all_property_names)
+    for prop_name in selected_properties:
+        df_prop = df_filtered[df_filtered["Property Name"] == prop_name]
 
-df_step1 = df_plot[df_plot['Property Name'].isin(selected_properties)] if selected_properties else df_plot
+        with st.expander(f"📁 {prop_name}", expanded=True):
+            st.markdown("### Filter for this property")
 
-# Step 2️⃣: Unit 筛选（依赖已选 Property Name）
-all_units = sorted(df_step1['Unit'].unique())
-select_all_units = st.checkbox("Select All Units", value=True)
-if select_all_units:
-    selected_units = all_units
-else:
-    selected_units = st.multiselect("Select Unit(s)", options=all_units)
+            all_units = sorted(df_prop["Unit"].unique())
+            select_all_units = st.checkbox(f"Select All Units ({prop_name})", key=f"{prop_name}_units_all", value=True)
+            selected_units = all_units if select_all_units else st.multiselect(
+                "Units", all_units, key=f"{prop_name}_units")
 
-df_step2 = df_step1[df_step1['Unit'].isin(selected_units)] if selected_units else df_step1
+            df_prop_units = df_prop[df_prop["Unit"].isin(selected_units)] if selected_units else df_prop
 
-# Step 3️⃣: Room 筛选（依赖已选 Unit）
-all_rooms = sorted(df_step2['Room'].unique())
-select_all_rooms = st.checkbox("Select All Rooms", value=True)
-if select_all_rooms:
-    selected_rooms = all_rooms
-else:
-    selected_rooms = st.multiselect("Select Room(s)", options=all_rooms)
+            all_rooms = sorted(df_prop_units["Room"].unique())
+            select_all_rooms = st.checkbox(f"Select All Rooms ({prop_name})", key=f"{prop_name}_rooms_all", value=True)
+            selected_rooms = all_rooms if select_all_rooms else st.multiselect(
+                "Rooms", all_rooms, key=f"{prop_name}_rooms")
 
-df_filtered = df_step2[df_step2['Room'].isin(selected_rooms)] if selected_rooms else df_step2
+            df_final = df_prop_units[df_prop_units["Room"].isin(selected_rooms)] if selected_rooms else df_prop_units
 
-
+            if df_final.empty:
+                st.info("No data for selected filters.")
+            else:
+                fig = px.timeline(
+                    df_final,
+                    x_start="Start",
+                    x_end="End",
+                    y="Property",
+                    color_discrete_sequence=["#A7C7E7"]
+                )
+                fig.update_yaxes(autorange="reversed")
+                fig.update_layout(
+                    showlegend=False,
+                    title=None,
+                    margin=dict(l=20, r=20, t=20, b=20),
+                    height=40 * len(df_final["Unit-Room"].unique()) + 100
+                )
+                st.plotly_chart(fig, use_container_width=True)
 # all_units = sorted(df_plot['Unit'].unique())
 # all_rooms = sorted(df_plot['Room'].unique())
 
@@ -101,17 +118,17 @@ df_filtered = df_step2[df_step2['Room'].isin(selected_rooms)] if selected_rooms 
 # if selected_rooms:
 #     df_filtered = df_filtered[df_filtered['Room'].isin(selected_rooms)]
 # # ➕ 若搜索后结果为空，提示用户
-if df_filtered.empty:
-    st.warning("No properties matched your search.")
-else:
-    fig = px.timeline(
-    df_filtered,
-    x_start="Start",
-    x_end="End",
-    y="Property Name",
-    color_discrete_sequence=["#A7C7E7"],  # 统一颜色
-    )
+# if df_filtered.empty:
+#     st.warning("No properties matched your search.")
+# else:
+#     fig = px.timeline(
+#     df_filtered,
+#     x_start="Start",
+#     x_end="End",
+#     y="Property Name",
+#     color_discrete_sequence=["#A7C7E7"],  # 统一颜色
+#     )
     
-    fig.update_yaxes(autorange="reversed")
-    fig.update_layout(showlegend=False, title="Occupancy Timeline")
-    st.plotly_chart(fig, use_container_width=True)
+#     fig.update_yaxes(autorange="reversed")
+#     fig.update_layout(showlegend=False, title="Occupancy Timeline")
+#     st.plotly_chart(fig, use_container_width=True)
