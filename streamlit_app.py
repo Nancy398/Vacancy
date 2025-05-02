@@ -114,6 +114,64 @@ for property_name in all_property_names:
 
         # 显示图表
         st.plotly_chart(fig, use_container_width=True)
+
+
+selected_date = st.date_input("📅 Select a date to view vacant units", datetime.date.today())
+
+# 找出所有 unit-room
+all_units = df[['Property Name','Property']]
+
+# 找出该时间点已被租的 unit-room
+occupied = df[
+    (df['Start'] <= pd.to_datetime(selected_date)) &
+    (df['End'] >= pd.to_datetime(selected_date))
+][['Property Name', 'Property']].drop_duplicates()
+
+# 反推 vacant 的 unit-room
+vacant = pd.merge(all_units, occupied, 
+                  on=['Property Name', 'Property'], 
+                  how='left', indicator=True)
+vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
+
+# 显示表格
+st.subheader(f"🏠 Units Vacant on {selected_date}")
+if vacant.empty:
+    st.info("No vacant units at this time.")
+else:
+    st.dataframe(vacant)
+
+    # 🔍 找出这些空置 unit 的全部租期信息
+    df_vacant_plot = pd.merge(vacant, df, on=['Property Name', 'Property'])
+
+    # 🎨 按 Property Name 展示图
+    for prop_name in df_vacant_plot['Property Name'].unique():
+        st.markdown(f"### 📌 {prop_name}")
+        df_prop = df_vacant_plot[df_vacant_plot['Property Name'] == prop_name]
+
+        fig = px.timeline(
+            df_prop,
+            x_start='Start',
+            x_end='End',
+            y='Unit-Room',
+            color_discrete_sequence=["#A7C7E7"]
+        )
+
+        fig.update_yaxes(autorange="reversed")
+        fig.update_layout(
+            showlegend=False,
+            title=None,
+            margin=dict(l=20, r=20, t=20, b=20),
+            xaxis=dict(
+                title="Date",
+                tickformat="%Y-%m-%d",
+                tickangle=45,
+                ticks="outside",
+                showgrid=True,
+                side="top"
+            ),
+            height=40 * len(df_prop["Unit-Room"].unique()) + 100
+        )
+        st.plotly_chart(fig, use_container_width=True)
 # all_property_names = sorted(df_plot['Property Name'].unique())
 
 # # 添加 "Select All" 复选框
