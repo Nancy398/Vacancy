@@ -43,9 +43,12 @@ df_plot = pd.DataFrame(records)
 # Streamlit 页面
 st.title("Property Occupancy Timeline")
 
-search = st.text_input("Search property name (partial match):")
-if search:
-    df_plot = df_plot[df_plot['Property'].str.contains(search, case=False, na=False)]
+all_properties = df_plot['Property'].unique().tolist()
+selected_properties = st.multiselect("Select one or more properties:", all_properties, default=all_properties)
+
+# 过滤数据
+df_plot_filtered = df_plot[df_plot['Property'].isin(selected_properties)]
+
 
 # ➕ 若搜索后结果为空，提示用户
 if df_plot.empty:
