@@ -61,11 +61,19 @@ for property_name in all_property_names:
         units_for_property = df[df['Property Name'] == property_name]['Unit'].unique()
         rooms_for_property = df[df['Property Name'] == property_name]['Room'].unique()
 
-        # 筛选 Unit
-        selected_units = st.multiselect("Select Units", options=units_for_property, default=units_for_property)
+        selected_units = st.multiselect(
+        "Select Units",
+        options=units_for_property,
+        default=units_for_property,
+        key=f"{property_name}_units"
+    )
 
-        # 筛选 Room
-        selected_rooms = st.multiselect("Select Rooms", options=rooms_for_property, default=rooms_for_property)
+        selected_rooms = st.multiselect(
+          "Select Rooms",
+        options=rooms_for_property,
+        default=rooms_for_property,
+        key=f"{property_name}_rooms"
+    )
 
         # 根据选择的 Unit 和 Room 筛选数据
         df_property = df[(df['Property Name'] == property_name) & 
