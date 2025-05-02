@@ -52,6 +52,13 @@ st.title("Property Occupancy Information")
 
 all_property_names = sorted(df_plot['Property Name'].unique())
 
+if select_all_props:
+    selected_properties = all_property_names
+else:
+    selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=[], label_visibility="collapsed")
+
+df_filtered = df_plot[df_plot["Property Name"].isin(selected_properties)]
+
 # 遍历所有 Property Name
 for property_name in all_property_names:
     df_prop = df_filtered[df_filtered["Property Name"] == prop_name]
