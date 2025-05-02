@@ -59,8 +59,8 @@ for property_name in all_property_names:
         show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
 
         # 筛选 Unit 和 Room
-        units_for_property = df_filtered_this_year[df_filtered_this_year['Property Name'] == property_name]['Unit'].unique()
-        rooms_for_property = df_filtered_this_year[df_filtered_this_year['Property Name'] == property_name]['Room'].unique()
+        units_for_property = df_plot[df_plot['Property Name'] == property_name]['Unit'].unique()
+        rooms_for_property = df_plot[df_plot['Property Name'] == property_name]['Room'].unique()
 
         # 筛选 Unit
         selected_units = st.multiselect("Select Units", options=units_for_property, default=units_for_property)
@@ -69,9 +69,9 @@ for property_name in all_property_names:
         selected_rooms = st.multiselect("Select Rooms", options=rooms_for_property, default=rooms_for_property)
 
         # 根据选择的 Unit 和 Room 筛选数据
-        df_property = df_filtered_this_year[(df_filtered_this_year['Property Name'] == property_name) & 
-                                            (df_filtered_this_year['Unit'].isin(selected_units)) & 
-                                            (df_filtered_this_year['Room'].isin(selected_rooms))]
+        df_property = df_plot[(df_plot['Property Name'] == property_name) & 
+                              (df_plot['Unit'].isin(selected_units)) & 
+                              (df_plot['Room'].isin(selected_rooms))]
 
         # 根据选项，动态设置 X 轴的时间范围
         if show_next_year:
@@ -84,7 +84,7 @@ for property_name in all_property_names:
             df_property,  # 使用该 Property Name 的数据
             x_start="Start",
             x_end="End",
-            y="Unit-Room",
+            y="Property",
             color_discrete_sequence=["#A7C7E7"]
         )
 
@@ -93,7 +93,7 @@ for property_name in all_property_names:
             showlegend=False,
             title=None,
             margin=dict(l=20, r=20, t=20, b=20),
-            height=40 * len(df_property["Unit-Room"].unique()) + 100,
+            height=40 * len(df_property["Property"].unique()) + 100,
             xaxis=dict(
                 tickformat="%Y-%m-%d",  # 日期格式：年-月-日
                 tickangle=45,
