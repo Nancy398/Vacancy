@@ -44,7 +44,7 @@ df_plot = pd.DataFrame(records)
 st.title("Property Occupancy Timeline")
 
 all_properties = df_plot['Property'].unique().tolist()
-selected_properties = st.multiselect("Select one or more properties:", all_properties, default=all_properties)
+selected_properties = st.multiselect("Select one or more properties:", all_properties, default=[])
 
 # 过滤数据
 df_plot_filtered = df_plot[df_plot['Property'].isin(selected_properties)]
