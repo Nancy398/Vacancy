@@ -106,7 +106,7 @@ for property_name in all_property_names:
             showlegend=False,
             title=None,
             margin=dict(l=20, r=20, t=20, b=20),
-            height=40 * len(df_property["Property"].unique()) + 100,
+            height=40 * len(df_final["Property"].unique()) + 100,
             xaxis=dict(
                 tickformat="%Y-%m-%d",  # 日期格式：年-月-日
                 tickangle=45,
