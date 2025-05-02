@@ -1,1 +1,5 @@
 streamlit
+pandas
+plotly.express
+google.oauth2.service_account
+gspread
