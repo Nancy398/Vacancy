@@ -64,7 +64,7 @@ for property_name in all_property_names:
         selected_units = all_units if select_all_units else st.multiselect(
             "Units", all_units, key=f"{prop_name}_units")
 
-        df_prop_units = df_prop[df_prop["Unit"].isin(selected_units)] if selected_units else df_prop
+        df_prop_units = df_prop[df_plot["Unit"].isin(selected_units)] if selected_units else df_prop
 
         all_rooms = sorted(df_prop_units["Room"].unique())
         select_all_rooms = st.checkbox(f"Select All Rooms ({prop_name})", key=f"{prop_name}_rooms_all", value=True)
