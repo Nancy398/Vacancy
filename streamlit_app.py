@@ -184,10 +184,12 @@ def save_data():
   
 save_data()
 
-st.markdown(
-    "<h1 style='text-align: center; color: #2E8B57;'> MooHousing Leasing Board</h1>",
-    unsafe_allow_html=True
-)
+col1, col2 = st.columns([1, 8])
+with col1:
+    st.image("MH.png", width=50)
+with col2:
+    st.markdown("<h1 style='margin-top: 10px;'>MooHousing Leasing Board</h1>", unsafe_allow_html=True)
+  
 tab1, tab2,tab3 = st.tabs(["🏠 Vacant Units", "📊 All Vacancy Info","📄 Leasing Data"])
 
 with tab2:
