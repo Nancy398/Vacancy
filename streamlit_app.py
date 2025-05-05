@@ -184,9 +184,9 @@ def save_data():
   
 save_data()
 
-col1, col2 = st.columns([1, 8])
+col1, col2 = st.columns([2, 8])
 with col1:
-    st.image("MH.PNG", width=50)
+    st.image("MH.PNG", width=200)
 with col2:
     st.markdown("<h1 style='margin-top: 10px;'>MooHousing Leasing Board</h1>", unsafe_allow_html=True)
   
