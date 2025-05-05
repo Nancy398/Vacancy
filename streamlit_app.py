@@ -88,6 +88,7 @@ records = []
 
 for idx, row in data.iterrows():
     if str(row.get('Notes', '')).strip().lower() == 'airbnb':
+        st.write(str(row.get('Notes', '')).strip().lower())
         continue  # 跳过 Notes 是 'airbnb' 的行
 
     prop = row['Property']
