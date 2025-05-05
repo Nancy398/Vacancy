@@ -184,6 +184,10 @@ def save_data():
   
 save_data()
 
+st.markdown(
+    "<h1 style='text-align: center; color: #4B8BBE;'>🏠 MooHousing Leasing Board</h1>",
+    unsafe_allow_html=True
+)
 tab1, tab2,tab3 = st.tabs(["🏠 Vacant Units", "📊 All Vacancy Info","📄 Leasing Data"])
 
 with tab2:
@@ -430,4 +434,4 @@ with tab3:
               use_container_width=True,
               # column_config={"selected_dates": st.column_config.TextColumn("Time")},
             )
-
+st.markdown('<div class="footer">© 2025 MooHousing Leasing Board - All rights reserved.</div>', unsafe_allow_html=True)
