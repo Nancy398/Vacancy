@@ -9,7 +9,7 @@ from gspread_dataframe import set_with_dataframe
 current_year = datetime.datetime.now().year
 next_year = current_year + 1
 
-
+@st.cache_data(ttl=300)
 def read_file(name,sheet):
   scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
   credentials = Credentials.from_service_account_info(
