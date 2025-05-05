@@ -118,7 +118,16 @@ with tab2:
     st.title("Property Occupancy Information")
     
     all_property_names = sorted(df['Property Name'].unique())
+
+    select_all_props = st.checkbox("Select All Property Names", value=True)
+  
+    if select_all_props:
+        selected_properties = all_property_names
+    else:
+        selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=all_property_names, label_visibility="collapsed")
     
+    df_filtered = df[df["Property Name"].isin(selected_properties)]
+      
     for property_name in all_property_names:
         with st.expander(f"Property: {property_name}"):
             # 在每个 Property Name 的面板内设置 Extend to Show Next Year 的选项
