@@ -347,6 +347,7 @@ with tab1:
             st.plotly_chart(fig, use_container_width=True)
 
 with tab3:
+      st.title('Leasing Data')
       Region = st.multiselect(
           "选择地区",
           ["US", "China"],
