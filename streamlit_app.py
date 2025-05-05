@@ -296,7 +296,11 @@ with tab1:
     if vacant.empty:
         st.info("No vacant units at this time.")
     else:
-        st.dataframe(vacant_with_dates)
+        with st.expander("Click to see DataFrame"):
+            st.dataframe(
+                vacant_with_dates,
+                use_container_width=True,
+            )
     
         # 🔍 找出这些空置 unit 的全部租期信息
         df_vacant_plot = pd.merge(vacant, df, on=['Property Name', 'Property'])
@@ -373,8 +377,8 @@ with tab3:
             default=["USC"]
       )
   
-      start_date = datetime(2024, 9, 1)  # 2024年11月1日
-      end_date = datetime(2025, 5, 31) 
+      start_date = datetime.datetime(2024, 9, 1)  # 2024年11月1日
+      end_date = datetime.datetime(2025, 5, 31) 
       col1, col2 = st.columns(2)
   
   # 在第一个列中添加开始日期选择器
