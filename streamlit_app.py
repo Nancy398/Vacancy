@@ -87,6 +87,9 @@ data = read_file('Vacancy','Full Book')
 records = []
 
 for idx, row in data.iterrows():
+    if str(row.get('Notes', '')).strip().lower() == 'Airbnb':
+        continue  # 跳过 Notes 是 'airbnb' 的行
+
     prop = row['Property']
     prop_name = row['Property Name'] 
     # 合并 current lease
