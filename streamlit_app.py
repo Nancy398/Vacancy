@@ -377,9 +377,9 @@ with tab3:
             default=["USC"]
       )
   
-        start_date = datetime.datetime(2024, 9, 1)  # 2024年11月1日
-        end_date = datetime.datetime(2025, 5, 31) 
-        col1, col2 = st.columns(2)
+      start_date = datetime.datetime(2024, 9, 1)  # 2024年11月1日
+      end_date = datetime.datetime(2025, 5, 31) 
+      col1, col2 = st.columns(2)
     
     # 在第一个列中添加开始日期选择器
         with col1:
