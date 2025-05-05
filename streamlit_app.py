@@ -270,7 +270,7 @@ with tab2:
                 marker=dict(
                 opacity=0.8,  # 设置透明度
                 shape='round',  # 设置圆角
-              )
+              ),
             )
     text=df_property['Property'],  # 显示每个条的文本
     textposition='inside',  # 设置文本位置
