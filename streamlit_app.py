@@ -266,6 +266,15 @@ with tab2:
                     title="Date"  # 设置 X 轴标题
                 )
             )
+          fig.update_traces(
+                marker=dict(
+                opacity=0.8,  # 设置透明度
+                shape='round',  # 设置圆角
+            )
+    text=df_property['Property'],  # 显示每个条的文本
+    textposition='inside',  # 设置文本位置
+    orientation="h"  # 水平显示条形
+)
     
             # 显示图表
             st.plotly_chart(fig, use_container_width=True)
