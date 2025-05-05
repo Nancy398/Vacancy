@@ -124,7 +124,7 @@ with tab2:
     if select_all_props:
         selected_properties = all_property_names
     else:
-        selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=all_property_names, label_visibility="collapsed")
+        selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=[], label_visibility="collapsed")
     
     df_filtered = df[df["Property Name"].isin(selected_properties)]
       
