@@ -128,7 +128,7 @@ with tab2:
     
     df_filtered = df[df["Property Name"].isin(selected_properties)]
       
-    for property_name in all_property_names:
+    for property_name in selected_properties:
         with st.expander(f"Property: {property_name}"):
             # 在每个 Property Name 的面板内设置 Extend to Show Next Year 的选项
             show_next_year = st.checkbox(f"Extend to Show Next Year for {property_name}", value=False)
