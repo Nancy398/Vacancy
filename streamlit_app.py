@@ -87,7 +87,7 @@ data = read_file('Vacancy','Full Book')
 records = []
 
 for idx, row in data.iterrows():
-    if str(row.get('Notes', '')).strip().lower() == 'Airbnb':
+    if str(row.get('Notes', '')).strip().lower() == 'airbnb':
         continue  # 跳过 Notes 是 'airbnb' 的行
 
     prop = row['Property']
