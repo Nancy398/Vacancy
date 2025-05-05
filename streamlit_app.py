@@ -377,27 +377,27 @@ with tab3:
             default=["USC"]
       )
   
-      start_date = datetime.datetime(2024, 9, 1)  # 2024年11月1日
-      end_date = datetime.datetime(2025, 5, 31) 
-      col1, col2 = st.columns(2)
-  
-  # 在第一个列中添加开始日期选择器
-      with col1:
-          start_selected = st.date_input(
-              "From:",
-              value=start_date,
-              min_value=start_date,
-              max_value=end_date
-          )
-      
-      # 在第二个列中添加结束日期选择器
-      with col2:
-          end_selected = st.date_input(
-              "To:",
-              value=end_date,
-              min_value=start_date,
-              max_value=end_date
-          )
+        start_date = datetime.datetime(2024, 9, 1)  # 2024年11月1日
+        end_date = datetime.datetime(2025, 5, 31) 
+        col1, col2 = st.columns(2)
+    
+    # 在第一个列中添加开始日期选择器
+        with col1:
+            start_selected = st.date_input(
+                "From:",
+                value=start_date,
+                min_value=start_date,
+                max_value=end_date
+            )
+        
+        # 在第二个列中添加结束日期选择器
+        with col2:
+            end_selected = st.date_input(
+                "To:",
+                value=end_date,
+                min_value=start_date,
+                max_value=end_date
+            )
       
       # 显示用户选择的日期范围
       st.write(f"您选择的日期范围是：{start_selected} 至 {end_selected}")
