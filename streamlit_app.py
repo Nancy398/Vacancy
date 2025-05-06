@@ -295,9 +295,9 @@ with tab1:
                       on=['Property Name', 'Property'], 
                       how='left', indicator=True)
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
-    vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type']].drop_duplicates(),
+    vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type']],
                                  on=['Property Name', 'Property'], how='left')
-
+    st.dataframe(vacant_with_dates)
     total_units = len(all_units)  # 总房间数量
     vacant_units = len(vacant)  # 空房间数量
     vacancy_rate = (vacant_units / total_units) * 100  # 空租率
