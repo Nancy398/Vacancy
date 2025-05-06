@@ -92,11 +92,13 @@ for idx, row in data.iterrows():
 
     prop = row['Property']
     prop_name = row['Property Name'] 
+    prop_type = row['Type']
     # 合并 current lease
     if pd.notnull(row['Lease From']) and pd.notnull(row['Lease To']):
         records.append({
             'Property Name': prop_name,
             'Property': prop,'Unit': row['Unit'], 'Room': row['Room'],
+            'Type': prop_type
             'Start': row['Lease From'],
             'End': row['Lease To']
         })
@@ -105,6 +107,7 @@ for idx, row in data.iterrows():
         records.append({
             'Property Name': prop_name,
             'Property': prop,'Unit': row['Unit'], 'Room': row['Room'],
+            'Type': prop_type
             'Start': row['Future Lease From'],
             'End': row['Future Lease To']
         })
@@ -319,38 +322,43 @@ with tab1:
         else:
             x_range = [f"{current_year}-01-01", f"{current_year}-12-31"]
           
+        for prop_type in df_vacant_plot['Type'].dropna().unique():
+            with st.expander(f"📂 {prop_type}", expanded=False):
+                df_type = df_vacant_plot[df_vacant_plot['Type'] == prop_type] 
+          
         # 🎨 按 Property Name 展示图
-        for prop_name in df_vacant_plot['Property Name'].unique():
-            if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
-              continue
-            st.markdown(f"### 📌 {prop_name}")
-            df_prop = df_vacant_plot[df_vacant_plot['Property Name'] == prop_name]
-    
-            fig = px.timeline(
-                df_prop,
-                x_start='Start',
-                x_end='End',
-                y='Property',
-                color_discrete_sequence=["#A7C7E7"]
-            )
-    
-            fig.update_yaxes(autorange="reversed")
-            fig.update_layout(
-                showlegend=False,
-                title=None,
-                margin=dict(l=20, r=20, t=20, b=20),
-                xaxis=dict(
-                    tickformat="%Y-%m-%d",
-                    tickangle=30,
-                    ticks="outside",
-                    showgrid=True,
-                    side="top",
-                    range = x_range
-                ),
-                height=40 * len(df_prop["Property"].unique()) + 100
-              
-            )
-            st.plotly_chart(fig, use_container_width=True)
+            for prop_name in df_vacant_plot['Property Name'].unique():
+                if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
+                  continue
+                st.markdown(f"### 📌 {prop_name}")
+                df_prop = df_vacant_plot[df_vacant_plot['Property Name'] == prop_name]
+        
+                fig = px.timeline(
+                    df_prop,
+                    x_start='Start',
+                    x_end='End',
+                    y='Property',
+                    color = 'type'
+                    color_discrete_sequence=["#A7C7E7"]
+                )
+        
+                fig.update_yaxes(autorange="reversed")
+                fig.update_layout(
+                    showlegend=False,
+                    title=None,
+                    margin=dict(l=20, r=20, t=20, b=20),
+                    xaxis=dict(
+                        tickformat="%Y-%m-%d",
+                        tickangle=30,
+                        ticks="outside",
+                        showgrid=True,
+                        side="top",
+                        range = x_range
+                    ),
+                    height=40 * len(df_prop["Property"].unique()) + 100
+                  
+                )
+                st.plotly_chart(fig, use_container_width=True)
 
 with tab3:
       st.title('Leasing Data')
