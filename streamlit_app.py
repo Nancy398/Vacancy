@@ -25,7 +25,7 @@ def read_file(name,sheet):
 Full = read_file("Vacancy","Full Book")
 Appfolio = read_file("Vacancy","Appfolio")
 
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=36000)
 def Update_data():
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
     Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
