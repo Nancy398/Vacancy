@@ -316,8 +316,6 @@ with tab1:
 
 # 显示总的空房间信息
 
-else:
-    
     # 显示表格
     st.subheader(f"🏠 Units Vacant on {selected_date}")
     if vacant.empty:
