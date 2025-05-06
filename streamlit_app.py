@@ -368,7 +368,7 @@ with tab1:
                     label = property_labels.get(prop_name, prop_name)
                     if '（' in label:
                         name, extra = label.split('（', 1)
-                        st.markdown(f"### 📌 {name}<br><span style='font-size:12px;'>（{extra}</span>", unsafe_allow_html=True)
+                        st.markdown(f"### 📌 {name}<br><span style='font-size:13px;'>（{extra}</span>", unsafe_allow_html=True)
                     else:
                         st.markdown(f"### 📌 {label}")
                     
