@@ -311,6 +311,7 @@ with tab1:
 # 将按类型分组的空房间数量与总房间数量合并
     vacant_by_type = pd.merge(vacant_by_type, total_by_type, on='Type')
     vacant_by_type['Vacancy Rate'] = (vacant_by_type['Vacant Units'] / vacant_by_type['Total Units']) * 100
+    
 
 
 # 显示总的空房间信息
@@ -321,8 +322,10 @@ with tab1:
         st.info("No vacant units at this time.")
     else:
         total_summary = pd.DataFrame({
-            '总空房间数量': [vacant_units],
-            '空租率': [vacancy_rate]
+            ['总空房间数量': [vacant_units],
+            '空租率': [vacancy_rate]],
+            vacant_by_type
+          
           })
         st.dataframe(total_summary)
         with st.expander("Click to see DataFrame"):
