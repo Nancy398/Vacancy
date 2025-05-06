@@ -98,7 +98,7 @@ for idx, row in data.iterrows():
         records.append({
             'Property Name': prop_name,
             'Property': prop,'Unit': row['Unit'], 'Room': row['Room'],
-            'Type': prop_type
+            'Type': prop_type,
             'Start': row['Lease From'],
             'End': row['Lease To']
         })
