@@ -331,7 +331,7 @@ with tab1:
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
                       continue
                     st.markdown(f"### 📌 {prop_name}")
-                    df_prop = df_vacant_plot[df_vacant_plot['Property Name'] == prop_name]
+                    df_prop = df_type[df_type['Property Name'] == prop_name]
             
                     fig = px.timeline(
                         df_prop,
