@@ -324,8 +324,8 @@ with tab1:
             '总空房间数量': [vacant_units],
             '空租率': [vacancy_rate] 
           })
-        st.dataframe(total_summary)
-        st.dataframe(vacant_by_type)
+        st.dataframe(total_summary.hide(axis="index"), use_container_width=True)
+        st.dataframe(vacant_by_type.hide(axis="index"), use_container_width=True)
         with st.expander("Click to see DataFrame"):
             st.dataframe(
                 vacant_with_dates,
