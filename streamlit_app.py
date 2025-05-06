@@ -346,12 +346,26 @@ with tab1:
         for prop_type in df_vacant_plot['Type'].dropna().unique():
             with st.expander(f"📂 {prop_type}", expanded=False):
                 df_type = df_vacant_plot[df_vacant_plot['Type'] == prop_type] 
+
+                vacant_counts = vacant_with_dates.groupby('Property Name')['Property'].nunique().reset_index(name='Vacant Units')
+                total_counts = df.groupby('Property Name')['Property'].nunique().reset_index(name='Total Units')
+                
+                # 合并计算 vacancy rate
+                vacancy_summary = pd.merge(total_counts, vacant_counts, on='Property Name', how='left').fillna(0)
+                vacancy_summary['Vacant Units'] = vacancy_summary['Vacant Units'].astype(int)
+                vacancy_summary['Vacancy Rate'] = (vacancy_summary['Vacant Units'] / vacancy_summary['Total Units'] * 100).round(2)
+                
+                # 构建一个字典用于映射
+                property_labels = {
+                    row['Property Name']: f"{row['Property Name']}（空{row['Vacant Units']}间 / 共{row['Total Units']}间，{row['Vacancy Rate']}%）"
+                    for _, row in vacancy_summary.iterrows()
+                }
           
         # 🎨 按 Property Name 展示图
                 for prop_name in df_type['Property Name'].unique():
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
                       continue
-                    st.markdown(f"### 📌 {prop_name}")
+                    st.markdown(f"### 📌 {property_labels.get(prop_name, prop_name)}")
                     df_prop = df_type[df_type['Property Name'] == prop_name]
             
                     fig = px.timeline(
