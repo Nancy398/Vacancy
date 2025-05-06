@@ -309,7 +309,7 @@ with tab1:
     total_by_type = df.groupby('Type')['Property'].nunique().reset_index(name='Total Units')
 # 将按类型分组的空房间数量与总房间数量合并
     vacant_by_type = pd.merge(vacant_by_type, total_by_type, on='Type')
-    vacant_by_type['Vacancy Rate'] = f"{round((vacant_by_type['Vacant Units'] / vacant_by_type['Total Units']) * 100, 2)}%"
+    vacant_by_type['Vacancy Rate'] = ((vacant_by_type['Vacant Units'] / vacant_by_type['Total Units']) * 100).apply(lambda x: f"{round(x, 2)}%")
     
 
 
