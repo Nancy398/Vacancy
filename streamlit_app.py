@@ -295,7 +295,7 @@ with tab1:
                       on=['Property Name', 'Property'], 
                       how='left', indicator=True)
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
-    vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type']],
+    vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type']].drop_duplicates(),
                                  on=['Property Name', 'Property'], how='left')
     st.dataframe(vacant_with_dates)
     total_units = len(all_units)  # 总房间数量
