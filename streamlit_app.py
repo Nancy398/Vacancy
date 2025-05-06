@@ -364,8 +364,14 @@ with tab1:
         # 🎨 按 Property Name 展示图
                 for prop_name in df_type['Property Name'].unique():
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
-                      continue
-                    st.markdown(f"### 📌 {property_labels.get(prop_name, prop_name)}")
+                      continue  
+                    label = property_labels.get(prop_name, prop_name)
+                    if '（' in label:
+                        name, extra = label.split('（', 1)
+                        st.markdown(f"### 📌 {name}<br><small>（{extra}</small>", unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"### 📌 {label}")
+                    
                     df_prop = df_type[df_type['Property Name'] == prop_name]
             
                     fig = px.timeline(
