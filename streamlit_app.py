@@ -303,7 +303,6 @@ with tab1:
     vacancy_rate = (vacant_units / total_units) * 100  # 空租率
 
 # 步骤5：按物业类型计算空房间信息
-    vacant_with_dates['Type'] = vacant_with_dates['Property Name'].map(df.set_index('Property Name')['Type'])
     vacant_by_type = vacant_with_dates.groupby('Type').size().reset_index(name='Vacant Units')
 
 # 计算每种类型的总房间数量
