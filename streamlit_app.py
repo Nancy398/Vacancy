@@ -442,9 +442,11 @@ with tab3:
       # Filter the dataframe based on the widget input and reshape it.
       df_filtered = Leasing_all[(Leasing_all["Region"].isin(Region)) & (Leasing_all["Signed Date"].between(start_selected,end_selected) & (Leasing_all["Term Catorgy"].isin(Term)) &(Leasing_all["Term"].isin(Category)) & (Leasing_all["Renewal"].isin(Renewal)) & (Leasing_all["Domestic"].isin(Domestic)))]
       
-      st.sidebar.header("选择透视表展示")
-      row_options = st.sidebar.multiselect('请选择展示行', options=['Region','Agent'], default=['Region'])
-      column_options = st.sidebar.multiselect('请选择展示列', options=['Domestic','Term','Renewal','Term Catorgy'], default=['Domestic','Term','Renewal'])
+      with st.sidebar:
+        st.header("选择透视表展示")
+        row_options = st.multiselect('请选择展示行', options=['Region','Agent'], default=['Region'])
+        column_options = st.multiselect('请选择展示列', options=['Domestic','Term','Renewal','Term Catorgy'], default=['Domestic','Term','Renewal'])
+      
       df_reshaped = generate_pivot_table(df_filtered,row_options,column_options)
       
       # # Display the data as a table using `st.dataframe`.
