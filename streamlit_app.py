@@ -298,13 +298,36 @@ with tab1:
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End']],
                                  on=['Property Name', 'Property'], how='left')
 
-    
+    total_units = len(all_units)  # 总房间数量
+    vacant_units = len(vacant)  # 空房间数量
+    vacancy_rate = (vacant_units / total_units) * 100  # 空租率
+
+# 步骤5：按物业类型计算空房间信息
+    vacant_with_dates['Type'] = vacant_with_dates['Property Name'].map(df.set_index('Property Name')['Type'])
+    vacant_by_type = vacant_with_dates.groupby('Type').size().reset_index(name='Vacant Units')
+
+# 计算每种类型的总房间数量
+    total_by_type = df.groupby('Type')['Property'].nunique().reset_index(name='Total Units')
+
+# 将按类型分组的空房间数量与总房间数量合并
+    vacant_by_type = pd.merge(vacant_by_type, total_by_type, on='Type')
+    vacant_by_type['Vacancy Rate'] = (vacant_by_type['Vacant Units'] / vacant_by_type['Total Units']) * 100
+
+
+# 显示总的空房间信息
+
+else:
     
     # 显示表格
     st.subheader(f"🏠 Units Vacant on {selected_date}")
     if vacant.empty:
         st.info("No vacant units at this time.")
     else:
+    total_summary = pd.DataFrame({
+        '总空房间数量': [vacant_units],
+        '空租率': [vacancy_rate]
+      })
+    st.dataframe(total_summary)
         with st.expander("Click to see DataFrame"):
             st.dataframe(
                 vacant_with_dates,
