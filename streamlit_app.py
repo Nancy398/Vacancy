@@ -299,11 +299,12 @@ with tab1:
                                  on=['Property Name', 'Property'], how='left')
     st.dataframe(vacant)
     total_units = len(all_units)  # 总房间数量
-    vacant_units = len(vacant)  # 空房间数量
+    vacant_units = len(vacant)/2  # 空房间数量
     vacancy_rate = (vacant_units / total_units) * 100  # 空租率
 
 # 步骤5：按物业类型计算空房间信息
-    vacant_by_type = vacant_with_dates.groupby('Type').size().reset_index(name='Vacant Units')
+    vacant_unique = vacant_with_dates.drop_duplicates(subset=['Property Name', 'Property'])
+    vacant_by_type = vacant_unique.groupby('Type').size().reset_index(name='Vacant Units')
     st.dataframe(vacant_by_type)
 
 # 计算每种类型的总房间数量
