@@ -327,7 +327,7 @@ with tab1:
                 df_type = df_vacant_plot[df_vacant_plot['Type'] == prop_type] 
           
         # 🎨 按 Property Name 展示图
-                for prop_name in df_vacant_plot['Property Name'].unique():
+                for prop_name in df_type['Property Name'].unique():
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
                       continue
                     st.markdown(f"### 📌 {prop_name}")
