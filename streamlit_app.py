@@ -323,11 +323,11 @@ else:
     if vacant.empty:
         st.info("No vacant units at this time.")
     else:
-    total_summary = pd.DataFrame({
-        '总空房间数量': [vacant_units],
-        '空租率': [vacancy_rate]
-      })
-    st.dataframe(total_summary)
+        total_summary = pd.DataFrame({
+            '总空房间数量': [vacant_units],
+            '空租率': [vacancy_rate]
+          })
+        st.dataframe(total_summary)
         with st.expander("Click to see DataFrame"):
             st.dataframe(
                 vacant_with_dates,
