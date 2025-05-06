@@ -297,23 +297,19 @@ with tab1:
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type']],
                                  on=['Property Name', 'Property'], how='left')
-    st.dataframe(vacant)
     total_units = len(all_units)  # 总房间数量
     vacant_units = len(vacant)/2  # 空房间数量
-    vacancy_rate = (vacant_units / total_units) * 100  # 空租率
+    vacancy_rate = ((vacant_units / total_units) * 100).round(2).astype(str) + '%'  # 空租率
 
 # 步骤5：按物业类型计算空房间信息
     vacant_unique = vacant_with_dates.drop_duplicates(subset=['Property Name', 'Property'])
     vacant_by_type = vacant_unique.groupby('Type').size().reset_index(name='Vacant Units')
-    st.dataframe(vacant_by_type)
 
 # 计算每种类型的总房间数量
     total_by_type = df.groupby('Type')['Property'].nunique().reset_index(name='Total Units')
-    st.dataframe(total_by_type)
 # 将按类型分组的空房间数量与总房间数量合并
     vacant_by_type = pd.merge(vacant_by_type, total_by_type, on='Type')
-    st.dataframe(vacant_by_type)
-    vacant_by_type['Vacancy Rate'] = (vacant_by_type['Vacant Units'] / vacant_by_type['Total Units']) * 100
+    vacant_by_type['Vacancy Rate'] = ((vacant_by_type['Vacant Units'] / vacant_by_type['Total Units']) * 100).round(2).astype(str) + '%'
     
 
 
