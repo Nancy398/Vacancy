@@ -327,38 +327,38 @@ with tab1:
                 df_type = df_vacant_plot[df_vacant_plot['Type'] == prop_type] 
           
         # 🎨 按 Property Name 展示图
-            for prop_name in df_vacant_plot['Property Name'].unique():
-                if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
-                  continue
-                st.markdown(f"### 📌 {prop_name}")
-                df_prop = df_vacant_plot[df_vacant_plot['Property Name'] == prop_name]
-        
-                fig = px.timeline(
-                    df_prop,
-                    x_start='Start',
-                    x_end='End',
-                    y='Property',
-                    color = 'type'
-                    color_discrete_sequence=["#A7C7E7"]
-                )
-        
-                fig.update_yaxes(autorange="reversed")
-                fig.update_layout(
-                    showlegend=False,
-                    title=None,
-                    margin=dict(l=20, r=20, t=20, b=20),
-                    xaxis=dict(
-                        tickformat="%Y-%m-%d",
-                        tickangle=30,
-                        ticks="outside",
-                        showgrid=True,
-                        side="top",
-                        range = x_range
-                    ),
-                    height=40 * len(df_prop["Property"].unique()) + 100
-                  
-                )
-                st.plotly_chart(fig, use_container_width=True)
+                for prop_name in df_vacant_plot['Property Name'].unique():
+                    if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
+                      continue
+                    st.markdown(f"### 📌 {prop_name}")
+                    df_prop = df_vacant_plot[df_vacant_plot['Property Name'] == prop_name]
+            
+                    fig = px.timeline(
+                        df_prop,
+                        x_start='Start',
+                        x_end='End',
+                        y='Property',
+                        color = 'type'
+                        color_discrete_sequence=["#A7C7E7"]
+                    )
+            
+                    fig.update_yaxes(autorange="reversed")
+                    fig.update_layout(
+                        showlegend=False,
+                        title=None,
+                        margin=dict(l=20, r=20, t=20, b=20),
+                        xaxis=dict(
+                            tickformat="%Y-%m-%d",
+                            tickangle=30,
+                            ticks="outside",
+                            showgrid=True,
+                            side="top",
+                            range = x_range
+                        ),
+                        height=40 * len(df_prop["Property"].unique()) + 100
+                      
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
 
 with tab3:
       st.title('Leasing Data')
