@@ -357,7 +357,7 @@ with tab1:
                 
                 # 构建一个字典用于映射
                 property_labels = {
-                    row['Property Name']: f"{row['Property Name']}（空{row['Vacant Units']}间 / 共{row['Total Units']}间，{row['Vacancy Rate']}%）"
+                    row['Property Name']: f"{row['Property Name']}（空{row['Vacant Units']}间 / 共{row['Total Units']}间，空租率{row['Vacancy Rate']}%）"
                     for _, row in vacancy_summary.iterrows()
                 }
           
