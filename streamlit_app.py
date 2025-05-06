@@ -338,7 +338,7 @@ with tab1:
                         x_start='Start',
                         x_end='End',
                         y='Property',
-                        color = 'type',
+                        color = 'Type',
                         color_discrete_sequence=["#A7C7E7"]
                     )
             
