@@ -55,8 +55,7 @@ def Update_data():
     Full['Lease To'] = pd.to_datetime(Full['Lease To'], errors='coerce')
     target_date = pd.to_datetime('2025-08-29')
 
-# 设定目标日期
-target_date = pd.to_datetime('2025-08-29')
+
     
     for i in range(len(Full)):
       for j in range(len(Future)):
