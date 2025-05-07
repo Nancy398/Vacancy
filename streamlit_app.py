@@ -374,7 +374,7 @@ with tab1:
                 }
           
         # 🎨 按 Property Name 展示图
-                for prop_name,i in enumerate(df_type['Property Name'].unique()):
+                for prop_name in df_type['Property Name'].unique():
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
                       continue  
                     label = str(property_labels.get(prop_name, prop_name))
