@@ -220,7 +220,7 @@ with tab2:
         selected_properties = st.multiselect("Select Property Name(s)", all_property_names, default=[], label_visibility="collapsed")
     
     df_filtered = df[df["Property Name"].isin(selected_properties)]
-      
+   
     for i,property_name in enumerate(selected_properties):
         with st.expander(f"Property: {property_name}"):
             # 在每个 Property Name 的面板内设置 Extend to Show Next Year 的选项
@@ -248,7 +248,8 @@ with tab2:
             df_property = df[(df['Property Name'] == property_name) & 
                              (df['Unit'].isin(selected_units)) & 
                              (df['Room'].isin(selected_rooms))]
-    
+            df_property['Status'] = df_property['Status'].fillna('').astype(str)
+            df_property['Status'] = df_property['Status'].apply(lambda x: x if x == 'Out for signing' else 'Other') 
             # 根据选项，动态设置 X 轴的时间范围
             if show_next_year:
                 x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
