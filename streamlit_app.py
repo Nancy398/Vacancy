@@ -253,7 +253,7 @@ with tab2:
                 x_start="Start",
                 x_end="End",
                 y="Property",
-                color = 'Status'
+                color = 'Status',
                 color_discrete_sequence=["#A7C7E7"]
             )
     
