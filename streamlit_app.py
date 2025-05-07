@@ -50,6 +50,13 @@ def Update_data():
     Future = read_file("Vacancy","Future")
     Future[['Unit1', 'Unit2']] = Future['Unit'].str.split(' - ', expand=True)
     WholeRentFuture = Future[(Future['Unit1']==Future['Unit2'])].reset_index(drop=True)
+    Full['Future Lease From'] = pd.to_datetime(Full['Future Lease From'], errors='coerce')
+    Full['Future Lease To'] = pd.to_datetime(Full['Future Lease To'], errors='coerce')
+    Full['Lease To'] = pd.to_datetime(Full['Lease To'], errors='coerce')
+    target_date = pd.to_datetime('2025-08-29')
+
+# 设定目标日期
+target_date = pd.to_datetime('2025-08-29')
     
     for i in range(len(Full)):
       for j in range(len(Future)):
@@ -65,7 +72,7 @@ def Update_data():
           Full['Future Lease To'][i] = WholeRentFuture['Lease To'][j]
           Full['Future Tenant'][i] = WholeRentFuture['Tenant'][j]
     for i in range(len(Full)):
-      if ((Full['Future Lease From'][i] != '')&(Full['Future Lease To'][i] != ''))or(Full['Lease To'][i]>='08/29/2025'):
+      if ((Full['Future Lease From'][i] != '')&(Full['Future Lease To'][i] != ''))or(Full['Lease To'][i]>=target_date):
         Full['Status'][i] = 'Signed'
       else:
         Full['Status'][i] = ''
