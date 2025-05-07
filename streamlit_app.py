@@ -314,13 +314,13 @@ with tab1:
     st.dataframe(Out_for_Signing)
     total_units = len(all_units)  # 总房间数量
     vacant_units = len(vacant)/2  # 空房间数量
-    Out_for_Signing_units = len(Out_for_Signing)
+    Out_for_Signing_units = len(Out_for_Signing)/2
     vacancy_rate = f"{round((vacant_units / total_units) * 100, 2)}%"
 
 # 步骤5：按物业类型计算空房间信息
     vacant_unique = vacant_with_dates.drop_duplicates(subset=['Property Name', 'Property'])
     vacant_by_type = vacant_unique.groupby('Type').size().reset_index(name='Vacant Units')
-    out_signing_by_type = df[df['Status'] == 'Out for Signing'].groupby('Type').size().reset_index(name='Out for Signing Count')
+    out_signing_by_type = df[df['Status'] == 'Out for Signing'].drop_duplicates(subset=['Property Name']).groupby('Type').size().reset_index(name='Out for Signing Count')
     st.dataframe(out_signing_by_type)
 
 # 计算每种类型的总房间数量
