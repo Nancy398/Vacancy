@@ -249,7 +249,7 @@ with tab2:
                              (df['Unit'].isin(selected_units)) & 
                              (df['Room'].isin(selected_rooms))]
             df_property['Status'] = df_property['Status'].fillna('').astype(str)
-            df_property['Status'] = df_property['Status'].apply(lambda x: x if x == 'Out for signing' else 'Other') 
+            df_property['Status'] = df_property['Status'].apply(lambda x: x if x == 'Out for Signing' else 'Other') 
             # 根据选项，动态设置 X 轴的时间范围
             if show_next_year:
                 x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
