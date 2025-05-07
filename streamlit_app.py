@@ -50,9 +50,9 @@ def Update_data():
     Future = read_file("Vacancy","Future")
     Future[['Unit1', 'Unit2']] = Future['Unit'].str.split(' - ', expand=True)
     WholeRentFuture = Future[(Future['Unit1']==Future['Unit2'])].reset_index(drop=True)
-    Full['Future Lease From'] = pd.to_datetime(Full['Future Lease From'], errors='coerce')
-    Full['Future Lease To'] = pd.to_datetime(Full['Future Lease To'], errors='coerce')
-    Full['Lease To'] = pd.to_datetime(Full['Lease To'], errors='coerce')
+    # Full['Future Lease From'] = pd.to_datetime(Full['Future Lease From'], errors='coerce')
+    # Full['Future Lease To'] = pd.to_datetime(Full['Future Lease To'], errors='coerce')
+    # Full['Lease To'] = pd.to_datetime(Full['Lease To'], errors='coerce')
     target_date = pd.to_datetime('2025-08-29')
 
 
