@@ -263,7 +263,10 @@ with tab2:
                 x_end="End",
                 y="Property",
                 color = 'Status',
-                color_discrete_sequence=['#7FB3D5']
+                color_discrete_map={
+                            'Out for signing': 'red',
+                            'Other':'#7FB3D5'
+                        }
             )
     
             # 设置日期格式和轴
