@@ -264,7 +264,7 @@ with tab2:
                 color = 'Status',
                 color_discrete_map={
                   'Out for signing': 'red',   
-                }
+            }
             )
     
             # 设置日期格式和轴
