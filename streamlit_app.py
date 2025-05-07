@@ -137,7 +137,7 @@ Leasing_US = Leasing_US[Leasing_US['signed date'].notna()]
 # Leasing_US['Signed Date'] = Leasing_US['Signed Date'].dt.date
 Leasing_US['Region'] = 'US'
 
-Leasing_China = read_file("China Sales","Apr")
+Leasing_China = read_file("China Sales","May")
 Leasing_China['Term length'] = Leasing_China['Term length'].astype(str)  # 确保是字符串
 Leasing_China['Term length'] = Leasing_China['Term length'].replace(to_replace='1年', value='12个月', regex=True)
 Leasing_China['Term length'] = Leasing_China['Term length'].str.replace(r'[^\d]', '', regex=True)  # 只保留数字
