@@ -50,12 +50,6 @@ def Update_data():
     Future = read_file("Vacancy","Future")
     Future[['Unit1', 'Unit2']] = Future['Unit'].str.split(' - ', expand=True)
     WholeRentFuture = Future[(Future['Unit1']==Future['Unit2'])].reset_index(drop=True)
-    # Full['Future Lease From'] = pd.to_datetime(Full['Future Lease From'], errors='coerce')
-    # Full['Future Lease To'] = pd.to_datetime(Full['Future Lease To'], errors='coerce')
-    # Full['Lease To'] = pd.to_datetime(Full['Lease To'], errors='coerce')
-    target_date = pd.to_datetime('2025-08-29')
-
-
     
     for i in range(len(Full)):
       for j in range(len(Future)):
@@ -71,10 +65,8 @@ def Update_data():
           Full['Future Lease To'][i] = WholeRentFuture['Lease To'][j]
           Full['Future Tenant'][i] = WholeRentFuture['Tenant'][j]
     for i in range(len(Full)):
-      if ((Full['Future Lease From'][i] != '')&(Full['Future Lease To'][i] != ''))or(Full['Lease To'][i]>=target_date):
+      if (Full['Future Lease From'][i] != '')&(Full['Future Lease To'][i] != ''):
         Full['Status'][i] = 'Signed'
-      else:
-        Full['Status'][i] = ''
     for i in range(len(Full)):
       for j in range(len(Lease)):
         if Full['Property'][i] == Lease['Unit Name'][j]:
@@ -270,7 +262,10 @@ with tab2:
                 x_end="End",
                 y="Property",
                 color = 'Status',
-                # color_discrete_sequence=["#A7C7E7"]
+                color_discrete_map={
+                  'Out for signing': 'red'
+                    },
+                color_discrete_sequence=["#A7C7E7"]
             )
     
             # 设置日期格式和轴
@@ -399,7 +394,10 @@ with tab1:
                         x_end='End',
                         y='Property',
                         color = 'Status',
-                        # color_discrete_sequence=["#A7C7E7"]
+                        color_discrete_map={
+                            'Out for signing': 'red'
+                            },
+                        color_discrete_sequence=["#A7C7E7"]
                     )
             
                     fig.update_yaxes(autorange="reversed")
