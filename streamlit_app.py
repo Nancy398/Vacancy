@@ -283,7 +283,7 @@ with tab2:
             )
     
             # 显示图表
-            st.plotly_chart(fig, use_container_width=True,key=f"{prop}_occupancy_chart")
+            st.plotly_chart(fig, use_container_width=True,key=f"{prop}_occupancy_chart_{i}")
 
 
 with tab1:
@@ -374,7 +374,7 @@ with tab1:
                 }
           
         # 🎨 按 Property Name 展示图
-                for prop_name in df_type['Property Name'].unique():
+                for prop_name,i in enumerate(df_type['Property Name'].unique()):
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
                       continue  
                     label = property_labels.get(prop_name, prop_name)
@@ -411,7 +411,7 @@ with tab1:
                         height=40 * len(df_prop["Property"].unique()) + 100
                       
                     )
-                    st.plotly_chart(fig, use_container_width=True,key = f"{prop}_timeline")
+                    st.plotly_chart(fig, use_container_width=True,key = f"{prop}_timeline_{i}")
 
 with tab3:
       st.title('Leasing Data')
