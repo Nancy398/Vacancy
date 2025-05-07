@@ -322,7 +322,7 @@ with tab1:
     vacant_unique = vacant_with_dates.drop_duplicates(subset=['Property Name', 'Property'])
     st.dataframe(vacant_unique)
     vacant_by_type = vacant_unique.groupby('Type').size().reset_index(name='Vacant Units')
-    out_signing_by_type = vacant_unique[vacant_unique['Status'] == 'Out for signing']
+    out_signing_by_type = vacant_unique[vacant_unique['Status'] == 'Out for Signing']
     st.dataframe(out_signing_by_type)
 
 # 计算每种类型的总房间数量
