@@ -391,7 +391,10 @@ with tab1:
                         x_end='End',
                         y='Property',
                         color = 'Status',
-                        color_discrete_sequence=['#7FB3D5']
+                        color_discrete_map={
+                            'Out for signing': 'red'
+                        }
+                        # color_discrete_sequence=['#7FB3D5']
                     )
             
                     fig.update_yaxes(autorange="reversed")
