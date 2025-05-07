@@ -64,7 +64,7 @@ def Update_data():
           Full['Future Lease From'][i] = WholeRentFuture['Move-in'][j]
           Full['Future Lease To'][i] = WholeRentFuture['Lease To'][j]
           Full['Future Tenant'][i] = WholeRentFuture['Tenant'][j]
-          
+    Full['Status']=''       
     for i in range(len(Full)):
       for j in range(len(Lease)):
         if Full['Property'][i] == Lease['Unit Name'][j]:
@@ -311,7 +311,6 @@ with tab1:
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type','Status']],
                                  on=['Property Name', 'Property'], how='left')
     Out_for_Signing = df[df['Status'].str.strip().str.lower() == 'out for signing']
-    st.dataframe(Out_for_Signing)
     total_units = len(all_units)  # 总房间数量
     vacant_units = len(vacant)/2  # 空房间数量
     Out_for_Signing_units = len(Out_for_Signing)/2
