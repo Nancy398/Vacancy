@@ -320,7 +320,7 @@ with tab1:
 # 步骤5：按物业类型计算空房间信息
     vacant_unique = vacant_with_dates.drop_duplicates(subset=['Property Name', 'Property'])
     vacant_by_type = vacant_unique.groupby('Type').size().reset_index(name='Vacant Units')
-    out_signing_by_type = df[df['Status'] == 'Out for Signing'].drop_duplicates(subset=['Property Name']).groupby('Type').size().reset_index(name='Out for Signing Count')
+    out_signing_by_type = df[df['Status'] == 'Out for Signing'].drop_duplicates(subset=['Property Name','Property']).groupby('Type').size().reset_index(name='Out for Signing Count')
     st.dataframe(out_signing_by_type)
 
 # 计算每种类型的总房间数量
