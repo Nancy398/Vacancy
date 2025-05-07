@@ -254,7 +254,7 @@ with tab2:
                 x_end="End",
                 y="Property",
                 color = 'Status',
-                color_discrete_sequence=["#A7C7E7"]
+                # color_discrete_sequence=["#A7C7E7"]
             )
     
             # 设置日期格式和轴
@@ -384,7 +384,7 @@ with tab1:
                         x_end='End',
                         y='Property',
                         color = 'Status',
-                        color_discrete_sequence=["#A7C7E7"]
+                        # color_discrete_sequence=["#A7C7E7"]
                     )
             
                     fig.update_yaxes(autorange="reversed")
