@@ -393,7 +393,7 @@ with tab1:
                         color = 'Status',
                         color_discrete_map={
                             'Out for signing': 'red',
-                            '':'#7FB3D5'
+                            ' ':'#7FB3D5'
                         }
                         # color_discrete_sequence=['#7FB3D5']
                     )
