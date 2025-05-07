@@ -375,8 +375,8 @@ with tab1:
           
         # 🎨 按 Property Name 展示图
                 unique_property_names = df_type['Property Name'].unique()
-                st.write(unique_property_names)
                 for prop_name in df_type['Property Name'].unique():
+                    st.write(f"{prop}_timeline_{i}")
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
                       continue  
                     label = str(property_labels.get(prop_name, prop_name))
