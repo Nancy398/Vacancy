@@ -283,7 +283,7 @@ with tab2:
             )
     
             # 显示图表
-            st.plotly_chart(fig, use_container_width=True,key=f"{property_name}_occupancy_chart")
+            st.plotly_chart(fig, use_container_width=True,key=f"{prop}_occupancy_chart")
 
 
 with tab1:
@@ -411,7 +411,7 @@ with tab1:
                         height=40 * len(df_prop["Property"].unique()) + 100
                       
                     )
-                    st.plotly_chart(fig, use_container_width=True,key = f"{property_name}_timeline")
+                    st.plotly_chart(fig, use_container_width=True,key = f"{prop}_timeline")
 
 with tab3:
       st.title('Leasing Data')
