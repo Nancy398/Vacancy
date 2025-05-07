@@ -65,10 +65,10 @@ def Update_data():
           Full['Future Lease To'][i] = WholeRentFuture['Lease To'][j]
           Full['Future Tenant'][i] = WholeRentFuture['Tenant'][j]
     for i in range(len(Full)):
-      if (Full['Future Lease From'][i] != '')&(Full['Future Lease To'][i] != ''):
+      if ((Full['Future Lease From'][i] != '')&(Full['Future Lease To'][i] != ''))or(Full['Lease To'][i]>='08/29/2025'):
         Full['Status'][i] = 'Signed'
-      elif Full['Lease To'][i]>='08/29/2025':
-        Full['Status'][i] = 'Signed' 
+      else:
+        Full['Status'][i] = ''
     for i in range(len(Full)):
       for j in range(len(Lease)):
         if Full['Property'][i] == Lease['Unit Name'][j]:
