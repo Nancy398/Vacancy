@@ -254,8 +254,7 @@ with tab2:
                 x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
             else:
                 x_range = [f"{current_year}-01-01", f"{current_year}-12-31"]  # 只显示今年
-            df_property["Start"] = pd.to_datetime(df_property["Start"], errors="coerce")
-            df_property["End"] = pd.to_datetime(df_property["End"], errors="coerce")
+
             # 根据筛选后的数据来展示图表
             fig = px.timeline(
                 df_property,  # 使用该 Property Name 的数据
@@ -263,9 +262,7 @@ with tab2:
                 x_end="End",
                 y="Property",
                 color = 'Status',
-                color_discrete_map={
-                  'Out for signing': 'red',   
-            }
+                color_discrete_sequence=['#7FB3D5']
             )
     
             # 设置日期格式和轴
@@ -394,9 +391,7 @@ with tab1:
                         x_end='End',
                         y='Property',
                         color = 'Status',
-                        color_discrete_map={
-                          'Out for signing': 'red'
-                            }
+                        color_discrete_sequence=['#7FB3D5']
                     )
             
                     fig.update_yaxes(autorange="reversed")
