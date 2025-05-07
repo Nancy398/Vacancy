@@ -374,6 +374,8 @@ with tab1:
                 }
           
         # 🎨 按 Property Name 展示图
+                unique_property_names = df_type['Property Name'].dropna().unique()
+                st.write(unique_property_names)
                 for prop_name in df_type['Property Name'].unique():
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
                       continue  
