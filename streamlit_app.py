@@ -263,8 +263,7 @@ with tab2:
                 y="Property",
                 color = 'Status',
                 color_discrete_map={
-                  'Out for signing': 'red',
-                  'Signed':'#A7C7E7'     
+                  'Out for signing': 'red',   
                     }
             )
     
@@ -395,8 +394,7 @@ with tab1:
                         y='Property',
                         color = 'Status',
                         color_discrete_map={
-                          'Out for signing': 'red',
-                          'Signed':'#A7C7E7' 
+                          'Out for signing': 'red'
                             }
                     )
             
