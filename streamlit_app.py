@@ -385,6 +385,8 @@ with tab1:
                         st.markdown(f"### 📌 {label}")
                     
                     df_prop = df_type[df_type['Property Name'] == prop_name]
+                    df_prop['Status'] = df_prop['Status'].fillna('').astype(str)
+                    df_prop['Status'] = df_prop['Status'].apply(lambda x: x if x == 'Out for Signing' else 'Other') 
             
                     fig = px.timeline(
                         df_prop,
