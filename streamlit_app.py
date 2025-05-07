@@ -67,7 +67,7 @@ def Update_data():
     for i in range(len(Full)):
       if (Full['Future Lease From'][i] != '')&(Full['Future Lease To'][i] != ''):
         Full['Status'][i] = 'Signed'
-      elif Full['Lease To'][i]>='07/25/2026':
+      elif Full['Lease To'][i]>='08/29/2025':
         Full['Status'][i] = 'Signed' 
     for i in range(len(Full)):
       for j in range(len(Lease)):
