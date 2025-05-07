@@ -377,7 +377,7 @@ with tab1:
                 for prop_name,i in enumerate(df_type['Property Name'].unique()):
                     if not prop_name or str(prop_name).strip().lower() in ["nan", "none"]:
                       continue  
-                    label = property_labels.get(prop_name, prop_name)
+                    label = str(property_labels.get(prop_name, prop_name))
                     if '（' in label:
                         name, extra = label.split('（', 1)
                         st.markdown(f"### 📌 {name}<br><span style='font-size:16px;'>（{extra}</span>", unsafe_allow_html=True)
