@@ -93,12 +93,14 @@ for idx, row in data.iterrows():
     prop = row['Property']
     prop_name = row['Property Name'] 
     prop_type = row['Type']
+    prop_status = row['Status']
     # 合并 current lease
     if pd.notnull(row['Lease From']) and pd.notnull(row['Lease To']):
         records.append({
             'Property Name': prop_name,
             'Property': prop,'Unit': row['Unit'], 'Room': row['Room'],
             'Type': prop_type,
+            'Status': prop_status,
             'Start': row['Lease From'],
             'End': row['Lease To']
         })
@@ -108,6 +110,7 @@ for idx, row in data.iterrows():
             'Property Name': prop_name,
             'Property': prop,'Unit': row['Unit'], 'Room': row['Room'],
             'Type': prop_type,
+            'Status': prop_status,
             'Start': row['Future Lease From'],
             'End': row['Future Lease To']
         })
@@ -250,6 +253,7 @@ with tab2:
                 x_start="Start",
                 x_end="End",
                 y="Property",
+                color = 'Status'
                 color_discrete_sequence=["#A7C7E7"]
             )
     
