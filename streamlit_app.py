@@ -284,7 +284,7 @@ with tab2:
             )
     
             # 显示图表
-            st.plotly_chart(fig, use_container_width=True,key=f"{property_name}_occupancy_chart"))
+            st.plotly_chart(fig, use_container_width=True,key=f"{property_name}_occupancy_chart")
 
 
 with tab1:
