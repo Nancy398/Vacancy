@@ -265,7 +265,7 @@ with tab2:
                 color_discrete_map={
                   'Out for signing': 'red',
                   'Signed':'#A7C7E7'     
-                    },
+                    }
             )
     
             # 设置日期格式和轴
@@ -397,7 +397,7 @@ with tab1:
                         color_discrete_map={
                           'Out for signing': 'red',
                           'Signed':'#A7C7E7' 
-                            },
+                            }
                     )
             
                     fig.update_yaxes(autorange="reversed")
