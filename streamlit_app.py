@@ -411,7 +411,7 @@ with tab1:
                         height=40 * len(df_prop["Property"].unique()) + 100
                       
                     )
-                    st.plotly_chart(fig, use_container_width=True,key = f"{property_name}_{unit}_timeline")
+                    st.plotly_chart(fig, use_container_width=True,key = f"{property_name}_timeline")
 
 with tab3:
       st.title('Leasing Data')
