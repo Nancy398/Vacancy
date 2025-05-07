@@ -304,7 +304,6 @@ with tab1:
         (df['End'] >= pd.to_datetime(selected_date)) &
         (df['Status'] != 'Out for Signing')
     ][['Property Name', 'Property']].drop_duplicates()
-    st.dataframe(occupied)
     # 反推 vacant 的 unit-room
     vacant = pd.merge(all_units, occupied, 
                       on=['Property Name', 'Property'], 
@@ -312,6 +311,7 @@ with tab1:
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type','Status']],
                                  on=['Property Name', 'Property'], how='left')
+    st.dataframe(vacant_with_dates)
     Out_for_Signing = vacant_with_dates[vacant_with_dates['Status'].str.strip().str.lower() == 'out for signing']
     st.dataframe(Out_for_Signing)
     total_units = len(all_units)  # 总房间数量
