@@ -323,7 +323,7 @@ with tab1:
     st.dataframe(vacant_by_type)
     st.dataframe(out_signing_by_type)
   
-    vacant_by_type = vacant_by_type + out_signing_by_type
+    # vacant_by_type = vacant_by_type + out_signing_by_type
 
 # 计算每种类型的总房间数量
     total_by_type = df.groupby('Type')['Property'].nunique().reset_index(name='Total Units')
