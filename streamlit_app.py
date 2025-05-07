@@ -24,6 +24,7 @@ def read_file(name,sheet):
 
 Full = read_file("Vacancy","Full Book")
 Appfolio = read_file("Vacancy","Appfolio")
+Lease = read_file("Vacancy","Lease")
 
 @st.cache_data(ttl=36000)
 def Update_data():
@@ -63,6 +64,14 @@ def Update_data():
           Full['Future Lease From'][i] = WholeRentFuture['Move-in'][j]
           Full['Future Lease To'][i] = WholeRentFuture['Lease To'][j]
           Full['Future Tenant'][i] = WholeRentFuture['Tenant'][j]
+    for i in range(len(Full)):
+      if (Full['Future Lease From'][i] != '')&(Full['Future Lease To'][i] != ''):
+        Full['Status'][i] = 'Signed'
+      elif Full['Lease To'][i] > 
+    for i in range(len(Full)):
+      for j in range(len(Lease)):
+        if Full['Property'][i] == Lease['Unit Name'][j]:
+          Full['Status'][i] = 'Out for Signing'
     return Full
 
 Full = Update_data()
@@ -275,7 +284,7 @@ with tab2:
             )
     
             # 显示图表
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True,key=f"{property_name}_occupancy_chart"))
 
 
 with tab1:
