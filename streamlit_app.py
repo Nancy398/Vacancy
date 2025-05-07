@@ -312,8 +312,8 @@ with tab1:
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type','Status']],
                                  on=['Property Name', 'Property'], how='left')
-    Out_for_Signing = vacant_with_dates[vacant_with_dates['Status'] =='Out for Signing']
-    # st.dataframe(Out_for_Signing)
+    Out_for_Signing = vacant_with_dates[vacant_with_dates['Status'] .str.strip().str.lower() == 'out for signing']
+    st.dataframe(Out_for_Signing)
     total_units = len(all_units)  # 总房间数量
     vacant_units = len(vacant)/2  # 空房间数量
     Out_for_Signing_units = len(Out_for_Signing)/2
