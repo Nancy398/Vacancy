@@ -312,10 +312,9 @@ with tab1:
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type','Status']],
                                  on=['Property Name', 'Property'], how='left')
     vacant_unique = vacant_with_dates.drop_duplicates(subset=['Property Name', 'Property','Start','End'])
-    st.dataframe(vacant_unique)
     Out_for_Signing = df[df['Status'].str.strip().str.lower() == 'out for signing']
     total_units = len(all_units)  # 总房间数量
-    vacant_units = len(vacant)/4  # 空房间数量
+    vacant_units = len(vacant_unique)/2  # 空房间数量
     Out_for_Signing_units = len(Out_for_Signing)/2
     vacancy_rate = f"{round(((vacant_units+Out_for_Signing_units) / total_units) * 100, 2)}%"
 
