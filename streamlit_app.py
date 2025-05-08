@@ -1,4 +1,4 @@
-import streamlit as st
+tabimport streamlit as st
 import pandas as pd
 import plotly.express as px
 from google.oauth2.service_account import Credentials
@@ -311,6 +311,7 @@ with tab1:
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type','Status']],
                                  on=['Property Name', 'Property'], how='left')
+    st.dataframe(vacant_with_dates)
     Out_for_Signing = df[df['Status'].str.strip().str.lower() == 'out for signing']
     total_units = len(all_units)  # 总房间数量
     vacant_units = len(vacant)/2  # 空房间数量
