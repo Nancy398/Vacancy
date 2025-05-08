@@ -310,6 +310,7 @@ with tab1:
                       how='left', indicator=True)
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
     vacant = vacant.drop_duplicates(subset=['Property Name', 'Property'])
+    st.dataframe(vacant)
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type','Status']],
                                  on=['Property Name', 'Property'], how='left')
     Out_for_Signing = df[df['Status'].str.strip().str.lower() == 'out for signing']
