@@ -314,7 +314,7 @@ with tab1:
     st.dataframe(vacant_with_dates)
     Out_for_Signing = df[df['Status'].str.strip().str.lower() == 'out for signing']
     total_units = len(all_units)  # 总房间数量
-    vacant_units = len(vacant)/2  # 空房间数量
+    vacant_units = len(vacant)/4  # 空房间数量
     Out_for_Signing_units = len(Out_for_Signing)/2
     vacancy_rate = f"{round(((vacant_units+Out_for_Signing_units) / total_units) * 100, 2)}%"
 
