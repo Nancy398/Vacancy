@@ -321,7 +321,9 @@ with tab1:
     vacant_by_type = vacant_unique.groupby('Type').size().reset_index(name='Vacant Units')
     out_signing_by_type = df[df['Status'] == 'Out for Signing'].drop_duplicates(subset=['Property Name','Property']).groupby('Type').size().reset_index(name='Out for Signing Count')
     st.dataframe(vacant_by_type)
+    st.write(len(vacant_by_type))
     st.dataframe(out_signing_by_type)
+    st.write(len(out_signing_by_type))
   
     # vacant_by_type = vacant_by_type + out_signing_by_type
 
