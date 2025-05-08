@@ -301,7 +301,8 @@ with tab1:
     # 找出该时间点已被租的 unit-room
     occupied = df[
         (df['Start'] <= pd.to_datetime(selected_date)) &
-        (df['End'] >= pd.to_datetime(selected_date))
+        (df['End'] >= pd.to_datetime(selected_date)) &
+        (df['Status'].str.strip().str.lower() == 'out for signing' )
     ][['Property Name', 'Property']].drop_duplicates()
     # 反推 vacant 的 unit-room
     vacant = pd.merge(all_units, occupied, 
