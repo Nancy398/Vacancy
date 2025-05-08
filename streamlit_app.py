@@ -340,7 +340,7 @@ with tab1:
         st.info("No vacant units at this time.")
     else:
         total_summary = pd.DataFrame({
-            '总空房间数量': ([vacant_units+Out_for_Signing_units]),
+            '总空房间数量': [vacant_units],
             'Out for Signing 数量':[Out_for_Signing_units],
             '空租率': [vacancy_rate] 
           })
