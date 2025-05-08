@@ -310,14 +310,13 @@ with tab1:
                       how='left', indicator=True)
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
     vacant = vacant.drop_duplicates(subset=['Property Name', 'Property'])
-    st.dataframe(vacant)
     vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type','Status']],
                                  on=['Property Name', 'Property'], how='left')
     Out_for_Signing = df[df['Status'].str.strip().str.lower() == 'out for signing']
     total_units = len(all_units)  # 总房间数量
     vacant_units = len(vacant)  # 空房间数量
     Out_for_Signing_units = len(Out_for_Signing)/2
-    vacancy_rate = f"{round(((vacant_units+Out_for_Signing_units) / total_units) * 100, 2)}%"
+    vacancy_rate = f"{round((vacant_units / total_units) * 100, 2)}%"
 
 # 步骤5：按物业类型计算空房间信息
     vacant_unique = vacant_with_dates.drop_duplicates(subset=['Property Name', 'Property'])
@@ -329,7 +328,6 @@ with tab1:
 # 将按类型分组的空房间数量与总房间数量合并
     vacant_by_type = pd.merge(vacant_by_type, out_signing_by_type, on='Type', how='left')
     vacant_by_type = pd.merge(vacant_by_type, total_by_type, on='Type', how='left')
-    vacant_by_type['Vacant Units'] = vacant_by_type['Vacant Units'] + vacant_by_type['Out for Signing Count']
     vacant_by_type['Vacancy Rate'] = ((vacant_by_type['Vacant Units'] / vacant_by_type['Total Units']) * 100).apply(lambda x: f"{round(x, 2)}%")
     
 
