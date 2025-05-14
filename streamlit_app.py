@@ -28,6 +28,8 @@ Lease = read_file("Vacancy","Lease")
 
 @st.cache_data(ttl=3600)
 def Update_data():
+    cols_to_clear = ['Tenant', 'Lease From','Lease To','Future Tenant','Future Lease From','Future Lease To']
+    Full[cols_to_clear] = ""
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
     Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
     WholeRent = Appfolio[(Appfolio['Unit1']==Appfolio['Unit2'])&(Appfolio['Status'].isin(['Current', 'Notice-Rented','Notice-Unrented']))].reset_index(drop=True)
