@@ -204,7 +204,7 @@ with col1:
 with col2:
     st.markdown("<h1 style='margin-top: 10px;'>MooHousing Leasing Board</h1>", unsafe_allow_html=True)
   
-tab1, tab2,tab3 = st.tabs(["🏠 Vacant Units", "📊 All Vacancy Info","📄 Leasing Data"])
+tab1, tab2 = st.tabs(["🏠 Vacant Units", "📊 All Vacancy Info"])
 
 with tab2:
     # Streamlit 页面
@@ -254,7 +254,7 @@ with tab2:
             if show_next_year:
                 x_range = [f"{current_year}-09-01", f"{next_year}-12-31"]  # 显示今年 + 明年
             else:
-                x_range = [f"{current_year}-09-01", f"{nxet_year}-07-25"]  # 只显示今年
+                x_range = [f"{current_year}-09-01", f"{next_year}-07-25"]  # 只显示今年
 
             # 根据筛选后的数据来展示图表
             fig = px.timeline(
@@ -363,7 +363,7 @@ with tab1:
         if show_next_year:
             x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
         else:
-            x_range = [f"{current_year}-01-01", f"{current_year}-12-31"]
+            x_range = [f"{current_year}-09-01", f"{next_year}-07-31"]
           
         for prop_type in df_vacant_plot['Type'].dropna().unique():
             with st.expander(f"📂 {prop_type}", expanded=False):
@@ -428,98 +428,98 @@ with tab1:
                     )
                     st.plotly_chart(fig, use_container_width=True,key = f"{prop_name}_timeline")
 
-with tab3:
-      st.title('Leasing Data')
-      Region = st.multiselect(
-          "选择地区",
-          ["US", "China"],
-            default=["US", "China"]
-      )
+# with tab3:
+#       st.title('Leasing Data')
+#       Region = st.multiselect(
+#           "选择地区",
+#           ["US", "China"],
+#             default=["US", "China"]
+#       )
       
-      Term = st.multiselect(
-          "选择长/短",
-          ["Long", "Short"],
-            default=["Long", "Short"]
-      )
+#       Term = st.multiselect(
+#           "选择长/短",
+#           ["Long", "Short"],
+#             default=["Long", "Short"]
+#       )
       
-      Category =  st.multiselect(
-          "选择春/秋季",
-          ["Spring", "Fall"],
-            default=["Fall"]
-      )
+#       Category =  st.multiselect(
+#           "选择春/秋季",
+#           ["Spring", "Fall"],
+#             default=["Fall"]
+#       )
       
-      Renewal =  st.multiselect(
-          "选择合同种类",
-          ["New", "Renew",'Transfer','Leo'],
-            default=["New", "Renew"]
-      )
+#       Renewal =  st.multiselect(
+#           "选择合同种类",
+#           ["New", "Renew",'Transfer','Leo'],
+#             default=["New", "Renew"]
+#       )
       
-      Domestic =  st.multiselect(
-          "选择房屋地区",
-          ["USC", "UCLA",'UCI','Leo'],
-            default=["USC"]
-      )
+#       Domestic =  st.multiselect(
+#           "选择房屋地区",
+#           ["USC", "UCLA",'UCI','Leo'],
+#             default=["USC"]
+#       )
   
-      start_date = datetime.datetime(2024, 9, 1)  # 2024年11月1日
-      end_date = datetime.date.today()
-      col1, col2 = st.columns(2)
+#       start_date = datetime.datetime(2024, 9, 1)  # 2024年11月1日
+#       end_date = datetime.date.today()
+#       col1, col2 = st.columns(2)
     
-    # 在第一个列中添加开始日期选择器
-      with col1:
-          start_selected = st.date_input(
-              "From:",
-              value=start_date,
-              min_value=start_date,
-              max_value=end_date
-          )
+#     # 在第一个列中添加开始日期选择器
+#       with col1:
+#           start_selected = st.date_input(
+#               "From:",
+#               value=start_date,
+#               min_value=start_date,
+#               max_value=end_date
+#           )
         
-        # 在第二个列中添加结束日期选择器
-      with col2:
-          end_selected = st.date_input(
-              "To:",
-              value=end_date,
-              min_value=start_date,
-              max_value=end_date
-          )
+#         # 在第二个列中添加结束日期选择器
+#       with col2:
+#           end_selected = st.date_input(
+#               "To:",
+#               value=end_date,
+#               min_value=start_date,
+#               max_value=end_date
+#           )
       
-      # 显示用户选择的日期范围
-      st.write(f"您选择的日期范围是：{start_selected} 至 {end_selected}")
+#       # 显示用户选择的日期范围
+#       st.write(f"您选择的日期范围是：{start_selected} 至 {end_selected}")
   
-      start_selected = pd.Timestamp(start_selected)
-      end_selected = pd.Timestamp(end_selected)
-      # Filter the dataframe based on the widget input and reshape it.
-      df_filtered = Leasing_all[(Leasing_all["Region"].isin(Region)) & (Leasing_all["Signed Date"].between(start_selected,end_selected) & (Leasing_all["Term Catorgy"].isin(Term)) &(Leasing_all["Term"].isin(Category)) & (Leasing_all["Renewal"].isin(Renewal)) & (Leasing_all["Domestic"].isin(Domestic)))]
+#       start_selected = pd.Timestamp(start_selected)
+#       end_selected = pd.Timestamp(end_selected)
+#       # Filter the dataframe based on the widget input and reshape it.
+#       df_filtered = Leasing_all[(Leasing_all["Region"].isin(Region)) & (Leasing_all["Signed Date"].between(start_selected,end_selected) & (Leasing_all["Term Catorgy"].isin(Term)) &(Leasing_all["Term"].isin(Category)) & (Leasing_all["Renewal"].isin(Renewal)) & (Leasing_all["Domestic"].isin(Domestic)))]
       
-      with st.expander("🧮 设置透视表参数", expanded=True):
-        row_options = st.multiselect(
-            '请选择展示行',
-            options=['Region','Agent'],
-            default=['Region']
-        )
-        column_options = st.multiselect(
-            '请选择展示列',
-            options=['Domestic','Term','Renewal','Term Catorgy'],
-            default=['Domestic','Term','Renewal']
-        )
+#       with st.expander("🧮 设置透视表参数", expanded=True):
+#         row_options = st.multiselect(
+#             '请选择展示行',
+#             options=['Region','Agent'],
+#             default=['Region']
+#         )
+#         column_options = st.multiselect(
+#             '请选择展示列',
+#             options=['Domestic','Term','Renewal','Term Catorgy'],
+#             default=['Domestic','Term','Renewal']
+#         )
 
       
-      df_reshaped = generate_pivot_table(df_filtered,row_options,column_options)
+#       df_reshaped = generate_pivot_table(df_filtered,row_options,column_options)
       
-      # # Display the data as a table using `st.dataframe`.
-      st.write('Leasing Data')
-      st.dataframe(
-          df_reshaped,
-          use_container_width=True,
-          # column_config={"selected_dates": st.column_config.TextColumn("Time")},
-      )
-      styled_pivot_table = df_reshaped.style.set_table_styles(
-          [{'selector': 'thead th', 'props': [('text-align', 'center')]}]
-      )
+#       # # Display the data as a table using `st.dataframe`.
+#       st.write('Leasing Data')
+#       st.dataframe(
+#           df_reshaped,
+#           use_container_width=True,
+#           # column_config={"selected_dates": st.column_config.TextColumn("Time")},
+#       )
+#       styled_pivot_table = df_reshaped.style.set_table_styles(
+#           [{'selector': 'thead th', 'props': [('text-align', 'center')]}]
+#       )
       
-      with st.expander("Click to see DataFrame"):
-          st.dataframe(
-              df_filtered,
-              use_container_width=True,
-              # column_config={"selected_dates": st.column_config.TextColumn("Time")},
-            )
+#       with st.expander("Click to see DataFrame"):
+#           st.dataframe(
+#               df_filtered,
+#               use_container_width=True,
+#               # column_config={"selected_dates": st.column_config.TextColumn("Time")},
+#             )
 st.markdown('<div class="footer">© 2025 MooHousing Leasing Board - All rights reserved.</div>', unsafe_allow_html=True)
