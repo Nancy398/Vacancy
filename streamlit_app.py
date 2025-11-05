@@ -252,9 +252,9 @@ with tab2:
             df_property['Status'] = df_property['Status'].apply(lambda x: x if x == 'Out for Signing' else 'Other') 
             # 根据选项，动态设置 X 轴的时间范围
             if show_next_year:
-                x_range = [f"{current_year}-01-01", f"{next_year}-12-31"]  # 显示今年 + 明年
+                x_range = [f"{current_year}-09-01", f"{next_year}-12-31"]  # 显示今年 + 明年
             else:
-                x_range = [f"{current_year}-01-01", f"{current_year}-12-31"]  # 只显示今年
+                x_range = [f"{current_year}-09-01", f"{nxet_year}-07-25"]  # 只显示今年
 
             # 根据筛选后的数据来展示图表
             fig = px.timeline(
