@@ -74,6 +74,7 @@ def Update_data():
     return Full
 
 Full = Update_data()
+st.dataframe(Full)
 
 @st.cache_data(ttl=300)
 def save_data1(id,sheet,df):
