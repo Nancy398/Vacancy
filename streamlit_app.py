@@ -33,11 +33,10 @@ def Update_data():
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
     Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
     WholeRent = Appfolio[(Appfolio['Unit1']==Appfolio['Unit2'])&(Appfolio['Status'].isin(['Current', 'Notice-Rented','Notice-Unrented']))].reset_index(drop=True)
-    st.dataframe(Full)
-    st.dataframe(Appfolio)
     for i in range(len(Full)):
       for j in range(len(Appfolio)):
         if (Full['Unit'][i] == Appfolio['Unit1'][j])&(Full['Room'][i] == Appfolio['Unit2'][j]):
+          st.write("Yes")
           Full['Property Name'][i] = Appfolio['Property Name'][j]
           Full['Lease From'][i] = Appfolio['Lease From'][j]
           Full['Lease To'][i] = Appfolio['Lease To'][j]
