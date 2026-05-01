@@ -44,7 +44,7 @@ def Update_data(Full, Appfolio, Lease): # 建议将DF作为参数传入
     Full.loc[Full['Property'].isin(Lease['Unit Name']), 'Status'] = 'Out for Signing' 
     return Full
 
-Full = Update_data()
+Full = Update_data(Full, Appfolio, Lease)
 st.dataframe(Full)
 
 @st.cache_data(ttl=300)
