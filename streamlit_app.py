@@ -27,51 +27,21 @@ Appfolio = read_file("Vacancy","Appfolio")
 Lease = read_file("Vacancy","Lease")
 
 @st.cache_data(ttl=3600)
-def Update_data():
-    cols_to_clear = ['Tenant', 'Lease From','Lease To','Future Tenant','Future Lease From','Future Lease To']
-    Full[cols_to_clear] = ""
+def Update_data(Full, Appfolio, Lease): # 建议将DF作为参数传入
+    # 1. 准备工作：拆分字段
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
     Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
-    WholeRent = Appfolio[(Appfolio['Unit1']==Appfolio['Unit2'])&(Appfolio['Status'].isin(['Current', 'Notice-Rented','Notice-Unrented']))].reset_index(drop=True)
-    for i in range(len(Full)):
-      for j in range(len(Appfolio)):
-        if (Full['Unit'][i] == Appfolio['Unit1'][j])&(Full['Room'][i] == Appfolio['Unit2'][j]):
-          # Full['Property Name'][i] = Appfolio['Property Name'][j]
-          Full['Lease From'][i] = Appfolio['Lease From'][j]
-          st.write(Full['Lease From'][i])
-          st.write(Appfolio['Lease From'][j])
-          Full['Lease To'][i] = Appfolio['Lease To'][j]
-          Full['Tenant'][i] = Appfolio['Tenant'][j]
-    st.dataframe(Full)
-    for i in range(len(Full)):
-      for j in range(len(WholeRent)):
-        if Full['Unit'][i] == WholeRent['Unit1'][j]:
-          Full['Lease From'][i] = WholeRent['Lease From'][j]
-          Full['Lease To'][i] = WholeRent['Lease To'][j]
-          Full['Tenant'][i] = WholeRent['Tenant'][j]
-    st.dataframe(Full)
-    Future = read_file("Vacancy","Future")
-    Future[['Unit1', 'Unit2']] = Future['Unit'].str.split(' - ', expand=True)
-    WholeRentFuture = Future[(Future['Unit1']==Future['Unit2'])].reset_index(drop=True)
-    
-    for i in range(len(Full)):
-      for j in range(len(Future)):
-        if (Full['Unit'][i] == Future['Unit1'][j])&(Full['Room'][i] == Future['Unit2'][j]):
-          Full['Future Lease From'][i] = Future['Move-in'][j]
-          Full['Future Lease To'][i] = Future['Lease To'][j]
-          Full['Future Tenant'][i] = Future['Tenant'][j]
-    
-    for i in range(len(Full)):
-      for j in range(len(WholeRentFuture)):
-        if Full['Unit'][i] == WholeRentFuture['Unit1'][j]:
-          Full['Future Lease From'][i] = WholeRentFuture['Move-in'][j]
-          Full['Future Lease To'][i] = WholeRentFuture['Lease To'][j]
-          Full['Future Tenant'][i] = WholeRentFuture['Tenant'][j]
-    Full['Status']=''       
-    for i in range(len(Full)):
-      for j in range(len(Lease)):
-        if Full['Property'][i] == Lease['Unit Name'][j]:
-          Full['Status'][i] = 'Out for Signing'
+    Appfolio_rooms = Appfolio[['Unit1', 'Unit2', 'Lease From', 'Lease To', 'Tenant']]
+    WholeRent = Appfolio[
+        (Appfolio['Unit1'] == Appfolio['Unit2']) & 
+        (Appfolio['Status'].isin(['Current', 'Notice-Rented', 'Notice-Unrented']))
+    ][['Unit1', 'Lease From', 'Lease To', 'Tenant']]
+
+    Full = Full.merge(Appfolio_rooms, 
+                      left_on=['Unit', 'Room'], 
+                      right_on=['Unit1', 'Unit2'], 
+                      how='left', suffixes=('', '_room'))
+    Full.loc[Full['Property'].isin(Lease['Unit Name']), 'Status'] = 'Out for Signing' 
     return Full
 
 Full = Update_data()
