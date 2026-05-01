@@ -36,8 +36,7 @@ def Update_data():
     for i in range(len(Full)):
       for j in range(len(Appfolio)):
         if (Full['Unit'][i] == Appfolio['Unit1'][j])&(Full['Room'][i] == Appfolio['Unit2'][j]):
-          st.write("Yes")
-          Full['Property Name'][i] = Appfolio['Property Name'][j]
+          # Full['Property Name'][i] = Appfolio['Property Name'][j]
           Full['Lease From'][i] = Appfolio['Lease From'][j]
           Full['Lease To'][i] = Appfolio['Lease To'][j]
           Full['Tenant'][i] = Appfolio['Tenant'][j]
