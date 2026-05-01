@@ -33,7 +33,8 @@ def Update_data():
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
     Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
     WholeRent = Appfolio[(Appfolio['Unit1']==Appfolio['Unit2'])&(Appfolio['Status'].isin(['Current', 'Notice-Rented','Notice-Unrented']))].reset_index(drop=True)
-    
+    st.datafreame(Full)
+    st.datafreame(Appfolio)
     for i in range(len(Full)):
       for j in range(len(Appfolio)):
         if (Full['Unit'][i] == Appfolio['Unit1'][j])&(Full['Room'][i] == Appfolio['Unit2'][j]):
@@ -41,14 +42,14 @@ def Update_data():
           Full['Lease From'][i] = Appfolio['Lease From'][j]
           Full['Lease To'][i] = Appfolio['Lease To'][j]
           Full['Tenant'][i] = Appfolio['Tenant'][j]
-    
+    st.datafreame(Full)
     for i in range(len(Full)):
       for j in range(len(WholeRent)):
         if Full['Unit'][i] == WholeRent['Unit1'][j]:
           Full['Lease From'][i] = WholeRent['Lease From'][j]
           Full['Lease To'][i] = WholeRent['Lease To'][j]
           Full['Tenant'][i] = WholeRent['Tenant'][j]
-    
+    st.datafreame(Full)
     Future = read_file("Vacancy","Future")
     Future[['Unit1', 'Unit2']] = Future['Unit'].str.split(' - ', expand=True)
     WholeRentFuture = Future[(Future['Unit1']==Future['Unit2'])].reset_index(drop=True)
