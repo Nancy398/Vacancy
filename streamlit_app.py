@@ -38,6 +38,8 @@ def Update_data():
         if (Full['Unit'][i] == Appfolio['Unit1'][j])&(Full['Room'][i] == Appfolio['Unit2'][j]):
           # Full['Property Name'][i] = Appfolio['Property Name'][j]
           Full['Lease From'][i] = Appfolio['Lease From'][j]
+          st.write(Full['Lease From'][i])
+          st.write(Appfolio['Lease From'][j])
           Full['Lease To'][i] = Appfolio['Lease To'][j]
           Full['Tenant'][i] = Appfolio['Tenant'][j]
     st.dataframe(Full)
