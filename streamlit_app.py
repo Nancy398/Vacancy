@@ -28,7 +28,6 @@ Lease = read_file("Vacancy","Lease")
 
 @st.cache_data(ttl=3600)
 def Update_data(Full, Appfolio, Lease): # 建议将DF作为参数传入
-    # 1. 准备工作：拆分字段
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
     Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
     Appfolio_rooms = Appfolio[['Unit1', 'Unit2', 'Lease From', 'Lease To', 'Tenant']]
@@ -36,11 +35,12 @@ def Update_data(Full, Appfolio, Lease): # 建议将DF作为参数传入
         (Appfolio['Unit1'] == Appfolio['Unit2']) & 
         (Appfolio['Status'].isin(['Current', 'Notice-Rented', 'Notice-Unrented']))
     ][['Unit1', 'Lease From', 'Lease To', 'Tenant']]
-
+    st.dataframe(Appfolio_rooms)
     Full = Full.merge(Appfolio_rooms, 
                       left_on=['Unit', 'Room'], 
                       right_on=['Unit1', 'Unit2'], 
                       how='left', suffixes=('', '_room'))
+    st.dataframe(Full)
     Full.loc[Full['Property'].isin(Lease['Unit Name']), 'Status'] = 'Out for Signing' 
     return Full
 
