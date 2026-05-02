@@ -24,6 +24,7 @@ def read_file(name,sheet):
 
 Full = read_file("Vacancy","Full Book")
 Appfolio = read_file("Vacancy","Appfolio")
+Future= read_file("Vacancy","Future")
 Lease = read_file("Vacancy","Lease")
 
 
@@ -88,7 +89,7 @@ def Update_data(Full_input, Appfolio_input, Lease_input, Future_input):
     Full.drop(columns=['key', 'Unit', 'Room'], inplace=True)
     return Full
 
-Full = Update_data(Full, Appfolio, Lease)
+Full = Update_data(Full, Appfolio, Lease,Future)
 st.dataframe(Full)
 
 @st.cache_data(ttl=300)
