@@ -42,7 +42,8 @@ def Update_data(Full, Appfolio, Lease, Future):
     Full['ID'] = Full['Unit'].str.strip() + "-" + Full['Room'].str.strip()
     Appfolio['ID'] = Appfolio['Unit1'].str.strip() + "-" + Appfolio['Unit2'].str.strip()
     Future['ID'] = Future['Unit1'].str.strip() + "-" + Future['Unit2'].str.strip()
-
+    st.dataframe(Full)
+    st.dataframe(Appfolio)
     # 2. 匹配当前租客 (Current Tenant)
     # 房间级匹配 (用刚才拼好的 ID)
     app_room_map = Appfolio.set_index('ID')
