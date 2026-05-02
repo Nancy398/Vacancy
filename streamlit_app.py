@@ -112,7 +112,7 @@ def Update_data(Full, Appfolio, Lease, Future):
     Full.loc[Full['Property'].isin(Lease['Unit Name']), 'Status'] = 'Out for Signing'
 
     # 删除临时列
-    Full.drop(columns=['Unit', 'Room', 'ID'], inplace=True)
+    Full.drop(columns=['ID'], inplace=True)
     
     return Full
 Full = Update_data(Full, Appfolio, Lease,Future)
