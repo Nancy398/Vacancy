@@ -33,70 +33,53 @@ Lease = read_file("Vacancy","Lease")
 def Update_data(Full, Appfolio, Lease, Future):
     Full = Full.copy()
     
-    # 1. 强力拆分函数：处理 "Unit - Room" 格式，并确保没有空格
-    def get_clean_split(series):
-        # 统一转字符串，替换全角破折号，按第一个 "-" 拆分
-        temp = series.astype(str).str.replace('—', '-').str.split('-', n=1, expand=True)
-        # 如果只有一项（没有-），补齐第二项为空
-        if temp.shape[1] < 2:
-            temp[1] = ""
-        return temp[0].str.strip(), temp[1].str.strip()
+    # 1. 拆分 + 强力清洗 (去掉所有隐藏空格)
+    Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True).astype(str)
+    Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True).astype(str)
+    Future[['Unit1', 'Unit2']] = Future['Unit'].str.split(' - ', expand=True).astype(str)
 
-    # 处理 Full 表
-    Full['Unit'], Full['Room'] = get_clean_split(Full['Property'])
-    # 处理 Appfolio 表
-    Appfolio['Unit1'], Appfolio['Unit2'] = get_clean_split(Appfolio['Unit'])
-    # 处理 Future 表
-    Future['Unit1'], Future['Unit2'] = get_clean_split(Future['Unit'])
-
-    # 2. 生成“绝对纯净”的 ID
-    # 格式统一为: "UNIT内容" + "@" + "ROOM内容" (用@避免原本内容里有减号的干扰)
-    Full['ID'] = Full['Unit'] + "@" + Full['Room']
-    Appfolio['ID'] = Appfolio['Unit1'] + "@" + Appfolio['Unit2']
-    Future['ID'] = Future['Unit1'] + "@" + Future['Unit2']
-
-    # 3. 匹配当前租客 (Current)
-    # A. 房间匹配
+    # 重点：拼一个临时 ID，格式为 "101-A"
+    Full['ID'] = Full['Unit'].str.strip() + "-" + Full['Room'].str.strip()
+    Appfolio['ID'] = Appfolio['Unit1'].str.strip() + "-" + Appfolio['Unit2'].str.strip()
+    Future['ID'] = Future['Unit1'].str.strip() + "-" + Future['Unit2'].str.strip()
+    st.write("Full 表 ID 前五行：", Full['ID'].head())
+    st.write("Appfolio 表 ID 前五行：", Appfolio['ID'].head())
+    # 2. 匹配当前租客 (Current Tenant)
+    # 房间级匹配 (用刚才拼好的 ID)
     app_room_map = Appfolio.drop_duplicates('ID').set_index('ID')
     Full['Tenant'] = Full['ID'].map(app_room_map['Tenant']).fillna("")
     Full['Lease From'] = Full['ID'].map(app_room_map['Lease From']).fillna("")
     Full['Lease To'] = Full['ID'].map(app_room_map['Lease To']).fillna("")
 
-    # B. 整套房匹配覆盖 (如果 Unit1 == Unit2，通常表示整套)
-    # 注意：这里我们只拿 Appfolio 里 Unit1 == Unit2 的行作为整套房源
-    app_whole_df = Appfolio[Appfolio['Unit1'] == Appfolio['Unit2']].drop_duplicates('Unit1')
-    app_whole_map = app_whole_df.set_index('Unit1')
-    
-    Full['Tenant'] = Full['Unit'].map(app_whole_map['Tenant']).fillna(Full['Tenant'])
-    Full['Lease From'] = Full['Unit'].map(app_whole_map['Lease From']).fillna(Full['Lease From'])
-    Full['Lease To'] = Full['Unit'].map(app_whole_map['Lease To']).fillna(Full['Lease To'])
+    # 整套房覆盖 (用 Unit)
+    app_whole_map = Appfolio[Appfolio['Unit1'] == Appfolio['Unit2']].drop_duplicates('Unit1').set_index('Unit1')
+    Full['Tenant'] = Full['Unit'].str.strip().map(app_whole_map['Tenant']).fillna(Full['Tenant'])
+    Full['Lease From'] = Full['Unit'].str.strip().map(app_whole_map['Lease From']).fillna(Full['Lease From'])
+    Full['Lease To'] = Full['Unit'].str.strip().map(app_whole_map['Lease To']).fillna(Full['Lease To'])
 
-    # 4. 匹配未来租客 (Future)
+    # 3. 匹配未来租客 (Future Tenant)
+    # 房间级匹配
     fut_room_map = Future.drop_duplicates('ID').set_index('ID')
     Full['Future Tenant'] = Full['ID'].map(fut_room_map['Tenant']).fillna("")
     Full['Future Lease From'] = Full['ID'].map(fut_room_map['Move-in']).fillna("")
     Full['Future Lease To'] = Full['ID'].map(fut_room_map['Lease To']).fillna("")
 
-    fut_whole_df = Future[Future['Unit1'] == Future['Unit2']].drop_duplicates('Unit1')
-    fut_whole_map = fut_whole_df.set_index('Unit1')
-    
-    Full['Future Tenant'] = Full['Unit'].map(fut_whole_map['Tenant']).fillna(Full['Future Tenant'])
-    Full['Future Lease From'] = Full['Unit'].map(fut_whole_map['Move-in']).fillna(Full['Future Lease From'])
-    Full['Future Lease To'] = Full['Unit'].map(fut_whole_map['Lease To']).fillna(Full['Future Lease To'])
+    # 整套房覆盖
+    fut_whole_map = Future[Future['Unit1'] == Future['Unit2']].drop_duplicates('Unit1').set_index('Unit1')
+    Full['Future Tenant'] = Full['Unit'].str.strip().map(fut_whole_map['Tenant']).fillna(Full['Future Tenant'])
+    Full['Future Lease From'] = Full['Unit'].str.strip().map(fut_whole_map['Move-in']).fillna(Full['Future Lease From'])
+    Full['Future Lease To'] = Full['Unit'].str.strip().map(fut_whole_map['Lease To']).fillna(Full['Future Lease To'])
 
-    # 5. 状态更新
+    # 4. 状态更新
     Full['Status'] = ""
     Full.loc[Full['Property'].isin(Lease['Unit Name']), 'Status'] = 'Out for Signing'
 
-    # 调试：如果在 Streamlit 里运行，取消下面三行的注释可以看到底哪没对上
-    # st.write("Full ID 样例:", Full['ID'].iloc[0] if not Full.empty else "空")
-    # st.write("Appfolio ID 样例:", Appfolio['ID'].iloc[0] if not Appfolio.empty else "空")
-    # st.dataframe(Full)
-
+    # 删除临时列
     Full.drop(columns=['Unit', 'Room', 'ID'], inplace=True)
+    
     return Full
 Full = Update_data(Full, Appfolio, Lease,Future)
-st.dataframe(Full)
+
 
 @st.cache_data(ttl=300)
 def save_data1(id,sheet,df):
