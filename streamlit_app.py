@@ -27,7 +27,45 @@ Appfolio = read_file("Vacancy","Appfolio")
 Future= read_file("Vacancy","Future")
 Lease = read_file("Vacancy","Lease")
 
+def check_id_matching(Full, Appfolio):
+    st.subheader("🔍 ID 匹配深度检查")
+    
+    # 1. 获取两边的唯一 ID 集合
+    full_ids = set(Full['ID'].unique())
+    appfolio_ids = set(Appfolio['ID'].unique())
+    
+    # 2. 计算匹配统计
+    matches = full_ids.intersection(appfolio_ids)
+    missing_in_appfolio = full_ids - appfolio_ids
+    
+    # 3. 统计展示
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Full 表总 ID 数", len(full_ids))
+    col2.metric("匹配成功数", len(matches))
+    col3.metric("匹配失败数", len(missing_in_appfolio))
+    
+    # 4. 视觉对比：一眼看出格式差异
+    st.write("### ID 格式比对 (各取前3个)")
+    comparison_data = {
+        "Full 表 ID 样例": list(full_ids)[:3] if full_ids else ["无数据"],
+        "Appfolio 表 ID 样例": list(appfolio_ids)[:3] if appfolio_ids else ["无数据"]
+    }
+    st.table(comparison_data)
+    
+    # 5. 详细排查：为什么失败？
+    if missing_in_appfolio:
+        with st.expander("查看前 20 个匹配失败的 ID (Full 中有但 Appfolio 中没有)"):
+            st.write(list(missing_in_appfolio)[:20])
+            st.info("💡 提示：请检查上面的 ID 是否多了 'Room' 字样、空格，或者横线 '-' 类型不同。")
 
+    # 6. 字符长度检查 (防止肉眼看不见的末尾空格)
+    if list(full_ids) and list(appfolio_ids):
+        f_sample = list(full_ids)[0]
+        a_sample = list(appfolio_ids)[0]
+        st.write(f"ℹ️ 长度测试：Full ID '{f_sample}' 长度为 {len(f_sample)}，Appfolio ID 样例长度为 {len(a_sample)}")
+
+# 在你的主程序中这样调用：
+# check_id_matching(Full, Appfolio)
 
 @st.cache_data(ttl=3600)
 def Update_data(Full, Appfolio, Lease, Future):
@@ -42,8 +80,7 @@ def Update_data(Full, Appfolio, Lease, Future):
     Full['ID'] = Full['Unit'].str.strip() + "-" + Full['Room'].str.strip()
     Appfolio['ID'] = Appfolio['Unit1'].str.strip() + "-" + Appfolio['Unit2'].str.strip()
     Future['ID'] = Future['Unit1'].str.strip() + "-" + Future['Unit2'].str.strip()
-    st.write("Full 表 ID 前五行：", Full['ID'].head())
-    st.write("Appfolio 表 ID 前五行：", Appfolio['ID'].head())
+    check_id_matching(Full, Appfolio)
     # 2. 匹配当前租客 (Current Tenant)
     # 房间级匹配 (用刚才拼好的 ID)
     app_room_map = Appfolio.drop_duplicates('ID').set_index('ID')
