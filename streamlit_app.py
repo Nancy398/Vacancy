@@ -31,7 +31,10 @@ Lease = read_file("Vacancy","Lease")
 
 @st.cache_data(ttl=3600)
 def Update_data(Full_input, Appfolio_input, Lease_input, Future_input):
-    Full = Full.copy()
+    Full = Full_input.copy()
+    Appfolio = Appfolio_input.copy()
+    Leasel = Lease_input.copy()
+    Future = Future_input.copy()
     
     # 2. 清洗：拆分并强行去除空格（这是匹配成功的关键）
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True).astype(str)
