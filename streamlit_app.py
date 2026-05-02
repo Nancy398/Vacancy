@@ -26,10 +26,16 @@ Full = read_file("Vacancy","Full Book")
 Appfolio = read_file("Vacancy","Appfolio")
 Lease = read_file("Vacancy","Lease")
 
+
+
 @st.cache_data(ttl=3600)
 def Update_data(Full, Appfolio, Lease): # 建议将DF作为参数传入
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
     Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
+    Full['Unit'] = Full['Unit'].astype(str).str.strip()
+    Full['Room'] = Full['Room'].astype(str).str.strip()
+    Appfolio['Unit1'] = Appfolio['Unit1'].astype(str).str.strip()
+    Appfolio['Unit2'] = Appfolio['Unit2'].astype(str).str.strip()
     Appfolio_rooms = Appfolio[['Unit1', 'Unit2', 'Lease From', 'Lease To', 'Tenant']]
     WholeRent = Appfolio[
         (Appfolio['Unit1'] == Appfolio['Unit2']) & 
