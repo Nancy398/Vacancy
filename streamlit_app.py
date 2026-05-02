@@ -45,7 +45,7 @@ def Update_data(Full, Appfolio, Lease, Future):
 
     # 2. 匹配当前租客 (Current Tenant)
     # 房间级匹配 (用刚才拼好的 ID)
-    app_room_map = Appfolio.drop_duplicates('ID').set_index('ID')
+    app_room_map = Appfolio.set_index('ID')
     Full['Tenant'] = Full['ID'].map(app_room_map['Tenant']).fillna("")
     Full['Lease From'] = Full['ID'].map(app_room_map['Lease From']).fillna("")
     Full['Lease To'] = Full['ID'].map(app_room_map['Lease To']).fillna("")
