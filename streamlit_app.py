@@ -30,24 +30,53 @@ Lease = read_file("Vacancy","Lease")
 
 @st.cache_data(ttl=3600)
 def Update_data(Full, Appfolio, Lease): # 建议将DF作为参数传入
-    Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True)
-    Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True)
-    Full['Unit'] = Full['Unit'].astype(str).str.strip()
-    Full['Room'] = Full['Room'].astype(str).str.strip()
-    Appfolio['Unit1'] = Appfolio['Unit1'].astype(str).str.strip()
-    Appfolio['Unit2'] = Appfolio['Unit2'].astype(str).str.strip()
-    Appfolio_rooms = Appfolio[['Unit1', 'Unit2', 'Lease From', 'Lease To', 'Tenant']]
-    WholeRent = Appfolio[
-        (Appfolio['Unit1'] == Appfolio['Unit2']) & 
-        (Appfolio['Status'].isin(['Current', 'Notice-Rented', 'Notice-Unrented']))
-    ][['Unit1', 'Lease From', 'Lease To', 'Tenant']]
-    st.dataframe(Appfolio_rooms)
-    Full = Full.merge(Appfolio_rooms, 
-                      left_on=['Unit', 'Room'], 
-                      right_on=['Unit1', 'Unit2'], 
-                      how='left', suffixes=('', '_room'))
-    st.dataframe(Full)
-    Full.loc[Full['Property'].isin(Lease['Unit Name']), 'Status'] = 'Out for Signing' 
+    Full = Full_input.copy()
+    Appfolio = Appfolio_input.copy()
+    # 2. 预处理：清空旧数据、去空格、统一转为字符串
+    cols_to_clear = ['Tenant', 'Lease From','Lease To','Future Tenant','Future Lease From','Future Lease To']
+    for col in cols_to_clear:
+        Full[col] = ""
+
+    # 拆分并去除空格（解决匹配不上的头号杀手）
+    Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True).astype(str)
+    Full['Unit'] = Full['Unit'].str.strip()
+    Full['Room'] = Full['Room'].str.strip()
+
+    Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True).astype(str)
+    Appfolio['Unit1'] = Appfolio['Unit1'].str.strip()
+    Appfolio['Unit2'] = Appfolio['Unit2'].str.strip()
+
+    # 3. 核心匹配逻辑：使用 map (比 merge 更简洁，且不会产生多余列)
+    # 创建一个唯一的索引键
+    Appfolio['key'] = Appfolio['Unit1'] + "_" + Appfolio['Unit2']
+    Full['key'] = Full['Unit'] + "_" + Full['Room']
+
+    # 建立映射字典 (如果 key 重复，保留最后一条)
+    tenant_map = Appfolio.set_index('key')['Tenant'].to_dict()
+    from_map = Appfolio.set_index('key')['Lease From'].to_dict()
+    to_map = Appfolio.set_index('key')['Lease To'].to_dict()
+
+    # 映射回 Full
+    Full['Tenant'] = Full['key'].map(tenant_map).fillna("")
+    Full['Lease From'] = Full['key'].map(from_map).fillna("")
+    Full['Lease To'] = Full['key'].map(to_map).fillna("")
+
+    # 4. 处理整套房 (WholeRent) 的覆盖逻辑
+    # 逻辑：如果 Unit1 == Unit2，说明是整套出租，按 Unit 匹配覆盖
+    whole_df = Appfolio[Appfolio['Unit1'] == Appfolio['Unit2']]
+    whole_tenant_map = whole_df.set_index('Unit1')['Tenant'].to_dict()
+    
+    # 只有当 Unit 在整套房字典里时才覆盖
+    Full['Tenant'] = Full['Unit'].map(whole_tenant_map).fillna(Full['Tenant'])
+
+    # 5. 更新状态 (Status)
+    # 使用 isin 替代循环，极速更新
+    Full['Status'] = ""
+    Full.loc[Full['Property'].isin(Lease_input['Unit Name']), 'Status'] = 'Out for Signing'
+
+    # 最后删除辅助用的 'key' 列
+    Full.drop(columns=['key'], inplace=True)
+    
     return Full
 
 Full = Update_data(Full, Appfolio, Lease)
