@@ -30,68 +30,62 @@ Lease = read_file("Vacancy","Lease")
 
 
 @st.cache_data(ttl=3600)
-def Update_data(Full_input, Appfolio_input, Lease_input, Future_input):
-    Full = Full_input.copy()
-    Appfolio = Appfolio_input.copy()
-    Leasel = Lease_input.copy()
-    Future = Future_input.copy()
+def Update_data(Full, Appfolio, Lease, Future):
+    Full = Full.copy()
     
-    # 2. 清洗：拆分并强行去除空格（这是匹配成功的关键）
+    # 1. 清洗：拆分并去除空格，确保全是字符串
     Full[['Unit', 'Room']] = Full['Property'].str.split(' - ', expand=True).astype(str)
     Appfolio[['Unit1', 'Unit2']] = Appfolio['Unit'].str.split(' - ', expand=True).astype(str)
     Future[['Unit1', 'Unit2']] = Future['Unit'].str.split(' - ', expand=True).astype(str)
 
     for df in [Full, Appfolio, Future]:
-        for col in df.columns:
-            if df[col].dtype == 'object':
-                df[col] = df[col].str.strip()
+        for col in ['Unit1', 'Unit2'] if 'Unit1' in df.columns else ['Unit', 'Room']:
+            df[col] = df[col].str.strip()
 
-    # 3. 初始化/清空目标列
-    target_cols = ['Tenant', 'Lease From', 'Lease To', 'Future Tenant', 'Future Lease From', 'Future Lease To']
-    for col in target_cols:
+    # 2. 初始化目标列
+    for col in ['Tenant', 'Lease From', 'Lease To', 'Future Tenant', 'Future Lease From', 'Future Lease To', 'Status']:
         Full[col] = ""
 
     # --- 第一部分：匹配当前租客 (Appfolio) ---
-    
-    # A. 按房间匹配 (Unit + Room)
-    # 将 Appfolio 变成以 (Unit1, Unit2) 为索引的字典，方便查找
-    current_room_map = Appfolio.set_index(['Unit1', 'Unit2'])
-    
+    # 使用 set_index 建立多重索引
+    current_map = Appfolio.set_index(['Unit1', 'Unit2'])
+
     for i in range(len(Full)):
         idx = (Full.at[i, 'Unit'], Full.at[i, 'Room'])
-        if idx in current_room_map.index:
-            Full.at[i, 'Tenant'] = current_room_map.loc[idx, 'Tenant']
-            Full.at[i, 'Lease From'] = current_room_map.loc[idx, 'Lease From']
-            Full.at[i, 'Lease To'] = current_room_map.loc[idx, 'Lease To']
+        if idx in current_map.index:
+            match = current_map.loc[[idx]] # 使用[[idx]]保证返回DataFrame
+            # 使用 .iloc[0] 确保只取第一个值，避免 Incompatible indexer 错误
+            Full.at[i, 'Tenant'] = str(match['Tenant'].iloc[0])
+            Full.at[i, 'Lease From'] = str(match['Lease From'].iloc[0])
+            Full.at[i, 'Lease To'] = str(match['Lease To'].iloc[0])
 
-    # B. 按整套房覆盖 (Whole Rent)
-    whole_app_map = Appfolio[Appfolio['Unit1'] == Appfolio['Unit2']].set_index('Unit1')
+    # 整套房覆盖 (Whole Rent)
+    whole_app_map = Appfolio[Appfolio['Unit1'] == Appfolio['Unit2']].drop_duplicates('Unit1').set_index('Unit1')
     Full['Tenant'] = Full['Unit'].map(whole_app_map['Tenant']).fillna(Full['Tenant'])
     Full['Lease From'] = Full['Unit'].map(whole_app_map['Lease From']).fillna(Full['Lease From'])
     Full['Lease To'] = Full['Unit'].map(whole_app_map['Lease To']).fillna(Full['Lease To'])
 
     # --- 第二部分：匹配未来租客 (Future) ---
+    future_map = Future.set_index(['Unit1', 'Unit2'])
 
-    # A. 按房间匹配 (Unit + Room)
-    future_room_map = Future.set_index(['Unit1', 'Unit2'])
-    
     for i in range(len(Full)):
         idx = (Full.at[i, 'Unit'], Full.at[i, 'Room'])
-        if idx in future_room_map.index:
-            Full.at[i, 'Future Tenant'] = future_room_map.loc[idx, 'Tenant']
-            Full.at[i, 'Future Lease From'] = future_room_map.loc[idx, 'Move-in']
-            Full.at[i, 'Future Lease To'] = future_room_map.loc[idx, 'Lease To']
+        if idx in future_map.index:
+            match = future_map.loc[[idx]]
+            Full.at[i, 'Future Tenant'] = str(match['Tenant'].iloc[0])
+            Full.at[i, 'Future Lease From'] = str(match['Move-in'].iloc[0])
+            Full.at[i, 'Future Lease To'] = str(match['Lease To'].iloc[0])
 
-    # B. 按整套房覆盖 (Whole Rent Future)
-    whole_fut_map = Future[Future['Unit1'] == Future['Unit2']].set_index('Unit1')
+    # 整套房覆盖 (Whole Rent Future)
+    whole_fut_map = Future[Future['Unit1'] == Future['Unit2']].drop_duplicates('Unit1').set_index('Unit1')
     Full['Future Tenant'] = Full['Unit'].map(whole_fut_map['Tenant']).fillna(Full['Future Tenant'])
     Full['Future Lease From'] = Full['Unit'].map(whole_fut_map['Move-in']).fillna(Full['Future Lease From'])
     Full['Future Lease To'] = Full['Unit'].map(whole_fut_map['Lease To']).fillna(Full['Future Lease To'])
 
-    # 4. 更新状态 (Status)
-    Full['Status'] = ""
+    # 3. 状态更新
     Full.loc[Full['Property'].isin(Lease['Unit Name']), 'Status'] = 'Out for Signing'
-    # Full.drop(columns=['Unit', 'Room'], inplace=True)
+
+    Full.drop(columns=['Unit', 'Room'], inplace=True)
     return Full
 
 Full = Update_data(Full, Appfolio, Lease,Future)
