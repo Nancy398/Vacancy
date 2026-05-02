@@ -36,10 +36,10 @@ def Update_data(Full_input, Appfolio_input, Lease_input, Future_input):
     Appfolio = Appfolio_input.copy()
     Future = Future_input.copy()
     
-    # 2. 预处理：清空/初始化目标列
-    cols_to_clear = ['Tenant', 'Lease From','Lease To','Future Tenant','Future Lease From','Future Lease To', 'Status']
-    for col in cols_to_clear:
-        Full[col] = ""
+    # # 2. 预处理：清空/初始化目标列
+    # cols_to_clear = ['Tenant', 'Lease From','Lease To','Future Tenant','Future Lease From','Future Lease To', 'Status']
+    # for col in cols_to_clear:
+    #     Full[col] = ""
 
     # 统一清洗：去空格、转字符串
     def clean_df(df, unit_col='Unit'):
