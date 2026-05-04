@@ -331,6 +331,7 @@ with tab1:
     df['End'] = pd.to_datetime(df['End'])
     
     selected_date = st.date_input("📅 Select a date to view vacant units", datetime.date.today())
+    selected_date = pd.to_datetime(selected_date)
     
     # 找出所有 unit-room
     all_units = df[['Property Name','Property']]
