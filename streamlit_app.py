@@ -69,43 +69,90 @@ def check_id_matching(Full, Appfolio):
 
 @st.cache_data(ttl=3600)
 def Update_data(Full, Appfolio, Lease, Future):
+    import pandas as pd
+
     Full = Full.copy()
-    # 1. 拆分 + 强力清洗 (去掉所有隐藏空格)
-    # Full['ID'] = clean(Full['Unit']) + "-" + clean(Full['Room'])
-    # Appfolio['ID'] = clean(Appfolio['Unit1']) + "-" + clean(Appfolio['Unit2'])
-    # Future['ID'] = clean(Future['Unit1']) + "-" + clean(Future['Unit2'])
-    # 重点：拼一个临时 ID，格式为 "101-A"
-    Full['ID'] = Full['Unit'].str.strip() + "-" + Full['Room'].str.strip()
-    Appfolio['ID'] = Appfolio['Unit1'].str.strip() + "-" + Appfolio['Unit2'].str.strip()
-    Future['ID'] = Future['Unit1'].str.strip() + "-" + Future['Unit2'].str.strip()
-    print("Room match rate:", Full['ID'].isin(Appfolio['ID']).mean())
-    # 2. 匹配当前租客 (Current Tenant)
-    # 房间级匹配 (用刚才拼好的 ID)
-    app_room_map = Appfolio.drop_duplicates('ID').set_index('ID')
-    Full['Tenant'] = Full['ID'].str.strip().map(app_room_map['Tenant']).fillna("")
-    Full['Lease From'] = Full['ID'].str.strip().map(app_room_map['Lease From']).fillna("")
-    Full['Lease To'] = Full['ID'].str.strip().map(app_room_map['Lease To']).fillna("")
-    # 整套房覆盖 (用 Unit)
-    app_whole_map = Appfolio[Appfolio['Unit1'] == Appfolio['Unit2']].drop_duplicates('Unit1').set_index('Unit1')
-    Full['Tenant'] = Full['Unit'].str.strip().map(app_whole_map['Tenant']).fillna(Full['Tenant'])
-    Full['Lease From'] = Full['Unit'].str.strip().map(app_whole_map['Lease From']).fillna(Full['Lease From'])
-    Full['Lease To'] = Full['Unit'].str.strip().map(app_whole_map['Lease To']).fillna(Full['Lease To'])
-    # 3. 匹配未来租客 (Future Tenant)
-    # 房间级匹配
-    fut_room_map = Future.drop_duplicates('ID').set_index('ID')
-    Full['Future Tenant'] = Full['ID'].map(fut_room_map['Tenant']).fillna("")
-    Full['Future Lease From'] = Full['ID'].map(fut_room_map['Move-in']).fillna("")
-    Full['Future Lease To'] = Full['ID'].map(fut_room_map['Lease To']).fillna("")
-    # 整套房覆盖
-    fut_whole_map = Future[Future['Unit1'] == Future['Unit2']].drop_duplicates('Unit1').set_index('Unit1')
-    Full['Future Tenant'] = Full['Unit'].str.strip().map(fut_whole_map['Tenant']).fillna(Full['Future Tenant'])
-    Full['Future Lease From'] = Full['Unit'].str.strip().map(fut_whole_map['Move-in']).fillna(Full['Future Lease From'])
-    Full['Future Lease To'] = Full['Unit'].str.strip().map(fut_whole_map['Lease To']).fillna(Full['Future Lease To'])
-    # 4. 状态更新
+    Appfolio = Appfolio.copy()
+    Future = Future.copy()
+
+    # ========= 1. 统一拆分（兼容各种 " - " / "-" / " -A"） =========
+    def split_unit(df, col, new_cols):
+        df[new_cols] = df[col].astype(str).str.split(r'\s*-\s*', expand=True)
+        return df
+
+    Full = split_unit(Full, 'Property', ['Unit', 'Room'])
+    Appfolio = split_unit(Appfolio, 'Unit', ['Unit1', 'Unit2'])
+    Future = split_unit(Future, 'Unit', ['Unit1', 'Unit2'])
+
+    # ========= 2. 强力清洗函数 =========
+    def clean(s):
+        return (
+            s.astype(str)
+             .str.strip()
+             .str.upper()
+             .str.replace(r'\s+', '', regex=True)
+        )
+
+    # ========= 3. 构造统一 ID =========
+    Full['ID'] = clean(Full['Unit']) + "-" + clean(Full['Room'])
+    Appfolio['ID'] = clean(Appfolio['Unit1']) + "-" + clean(Appfolio['Unit2'])
+    Future['ID'] = clean(Future['Unit1']) + "-" + clean(Future['Unit2'])
+
+    # ========= 4. 当前租客（房间级） =========
+    app_room_map = (
+        Appfolio
+        .drop_duplicates('ID')
+        .set_index('ID')
+    )
+
+    Full['Tenant'] = Full['ID'].map(app_room_map['Tenant'])
+    Full['Lease From'] = Full['ID'].map(app_room_map['Lease From'])
+    Full['Lease To'] = Full['ID'].map(app_room_map['Lease To'])
+
+    # ========= 5. 当前租客（整套覆盖） =========
+    app_whole_map = (
+        Appfolio[clean(Appfolio['Unit1']) == clean(Appfolio['Unit2'])]
+        .drop_duplicates('Unit1')
+        .set_index(clean(Appfolio['Unit1']))
+    )
+
+    Full['Tenant'] = clean(Full['Unit']).map(app_whole_map['Tenant']).fillna(Full['Tenant'])
+    Full['Lease From'] = clean(Full['Unit']).map(app_whole_map['Lease From']).fillna(Full['Lease From'])
+    Full['Lease To'] = clean(Full['Unit']).map(app_whole_map['Lease To']).fillna(Full['Lease To'])
+
+    # ========= 6. 未来租客（房间级） =========
+    fut_room_map = (
+        Future
+        .drop_duplicates('ID')
+        .set_index('ID')
+    )
+
+    Full['Future Tenant'] = Full['ID'].map(fut_room_map['Tenant'])
+    Full['Future Lease From'] = Full['ID'].map(fut_room_map['Move-in'])
+    Full['Future Lease To'] = Full['ID'].map(fut_room_map['Lease To'])
+
+    # ========= 7. 未来租客（整套覆盖） =========
+    fut_whole_map = (
+        Future[clean(Future['Unit1']) == clean(Future['Unit2'])]
+        .drop_duplicates('Unit1')
+        .set_index(clean(Future['Unit1']))
+    )
+
+    Full['Future Tenant'] = clean(Full['Unit']).map(fut_whole_map['Tenant']).fillna(Full['Future Tenant'])
+    Full['Future Lease From'] = clean(Full['Unit']).map(fut_whole_map['Move-in']).fillna(Full['Future Lease From'])
+    Full['Future Lease To'] = clean(Full['Unit']).map(fut_whole_map['Lease To']).fillna(Full['Future Lease To'])
+
+    # ========= 8. 状态 =========
     Full['Status'] = ""
     Full.loc[Full['Property'].isin(Lease['Unit Name']), 'Status'] = 'Out for Signing'
-    # 删除临时列
+
+    # ========= 9. Debug（非常重要） =========
+    match_rate = Full['ID'].isin(Appfolio['ID']).mean()
+    print(f"Room match rate: {match_rate:.2%}")
+
+    # ========= 10. 清理 =========
     Full.drop(columns=['ID'], inplace=True)
+
     return Full
 Full = Update_data(Full, Appfolio, Lease,Future)
 
