@@ -107,7 +107,7 @@ def Update_data(Full, Appfolio, Lease):
     print(f"Room match rate: {match_rate:.2%}")
 
     return Full
-Full = Update_data(Full, Appfolio, Lease,Future)
+Full = Update_data(Full, Appfolio, Lease)
 
 
 @st.cache_data(ttl=300)
