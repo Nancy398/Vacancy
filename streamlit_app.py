@@ -71,9 +71,9 @@ def check_id_matching(Full, Appfolio):
 def Update_data(Full, Appfolio, Lease, Future):
     Full = Full.copy()
     # 1. 拆分 + 强力清洗 (去掉所有隐藏空格)
-    Full['ID'] = clean(Full['Unit']) + "-" + clean(Full['Room'])
-    Appfolio['ID'] = clean(Appfolio['Unit1']) + "-" + clean(Appfolio['Unit2'])
-    Future['ID'] = clean(Future['Unit1']) + "-" + clean(Future['Unit2'])
+    # Full['ID'] = clean(Full['Unit']) + "-" + clean(Full['Room'])
+    # Appfolio['ID'] = clean(Appfolio['Unit1']) + "-" + clean(Appfolio['Unit2'])
+    # Future['ID'] = clean(Future['Unit1']) + "-" + clean(Future['Unit2'])
     # 重点：拼一个临时 ID，格式为 "101-A"
     Full['ID'] = Full['Unit'].str.strip() + "-" + Full['Room'].str.strip()
     Appfolio['ID'] = Appfolio['Unit1'].str.strip() + "-" + Appfolio['Unit2'].str.strip()
