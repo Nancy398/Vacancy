@@ -336,10 +336,14 @@ with tab1:
     all_units = df[['Property Name','Property']]
     
     # 找出该时间点已被租的 unit-room
-    occupied = df[
-        (df['Start'] <= pd.to_datetime(selected_date)) &
-        (df['End'] >= pd.to_datetime(selected_date)) &
-        (df['Status'].str.strip().str.lower() != 'out for signing' )
+    df_active = df[
+        (df['Start'] <= selected_date) &
+        (df['End'] >= selected_date)
+    ]
+    
+    # ========= 2. occupied =========
+    occupied = df_active[
+        df_active['Status'].str.strip().str.lower() != 'out for signing'
     ][['Property Name', 'Property']].drop_duplicates()
     # 反推 vacant 的 unit-room
     vacant = pd.merge(all_units, occupied, 
@@ -347,9 +351,9 @@ with tab1:
                       how='left', indicator=True)
     vacant = vacant[vacant['_merge'] == 'left_only'].drop(columns=['_merge'])
     vacant = vacant.drop_duplicates(subset=['Property Name', 'Property']).reset_index(drop=True)
-    vacant_with_dates = pd.merge(vacant, df[['Property Name', 'Property', 'Start', 'End','Type','Status']],
+    vacant_with_dates = pd.merge(vacant, df_active[['Property Name', 'Property', 'Start', 'End','Type','Status']],
                                  on=['Property Name', 'Property'], how='left')
-    Out_for_Signing = df[df['Status'].str.strip().str.lower() == 'out for signing']
+    Out_for_Signing = df_active[df_active['Status'].str.strip().str.lower() == 'out for signing']
     total_units = len(all_units)  # 总房间数量
     vacant_units = len(vacant)  # 空房间数量
     Out_for_Signing_units = len(Out_for_Signing)/2
